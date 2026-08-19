@@ -48,8 +48,20 @@ const routes = [
       {
         path: 'maintenance',
         name: 'maintenance',
-        component: () => import('@/pages/ComingSoon.vue'),
+        component: () => import('@/pages/maintenance/MaintenanceListPage.vue'),
         meta: { requiresAuth: true, title: 'Maintenance' },
+      },
+      {
+        path: 'maintenance/create',
+        name: 'maintenance-create',
+        component: () => import('@/pages/maintenance/MaintenanceCreatePage.vue'),
+        meta: { requiresAuth: true, title: 'Create maintenance request', permission: 'maintenance:request' },
+      },
+      {
+        path: 'maintenance/:id',
+        name: 'maintenance-detail',
+        component: () => import('@/pages/maintenance/MaintenanceDetailPage.vue'),
+        meta: { requiresAuth: true, title: 'Maintenance request' },
       },
       {
         path: 'transfers',

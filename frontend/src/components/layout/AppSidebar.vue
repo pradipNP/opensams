@@ -25,6 +25,9 @@ function isActive(item) {
   if (item.name === 'assets') {
     return String(route.path).startsWith('/assets');
   }
+  if (item.name === 'maintenance') {
+    return String(route.path).startsWith('/maintenance');
+  }
   return route.name === item.name;
 }
 </script>

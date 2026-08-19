@@ -85,3 +85,10 @@ export function qrImageSrc(value) {
   }
   return `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(value)}`;
 }
+
+export function shortId(value) {
+  if (!value) {
+    return '—';
+  }
+  return String(value).slice(0, 8).toUpperCase();
+}
