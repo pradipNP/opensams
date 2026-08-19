@@ -22,6 +22,9 @@ const items = computed(() =>
 );
 
 function isActive(item) {
+  if (item.name === 'assets') {
+    return String(route.path).startsWith('/assets');
+  }
   return route.name === item.name;
 }
 </script>

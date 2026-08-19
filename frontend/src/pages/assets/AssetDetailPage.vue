@@ -1,0 +1,212 @@
+<script setup>
+import { computed, onMounted, ref, watch } from 'vue';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
+import Alert from '@/components/ui/Alert.vue';
+import AssetHistory from '@/components/assets/AssetHistory.vue';
+import { getAsset, getAssetHistory } from '@/api/asset.api';
+import { displayValue, errorMessage, formatCurrency, formatDate, formatDateTime, qrImageSrc } from '@/utils/format';
+import { useAuthStore } from '@/stores/auth.store';
+import { useAppStore } from '@/stores/app.store';
+
+const route = useRoute();
+const router = useRouter();
+const auth = useAuthStore();
+const app = useAppStore();
+
+const loading = ref(true);
+const error = ref('');
+const asset = ref(null);
+const banner = ref('');
+const historyRecords = ref([]);
+const historyLoading = ref(false);
+const historyError = ref('');
+
+const canWrite = computed(() => auth.hasPermission('assets:write'));
+
+function statusStyle(status) {
+  const color = status?.colorCode || '#64748b';
+  return {
+    color,
+    backgroundColor: `${color}22`,
+    border: `1px solid ${color}44`,
+  };
+}
+
+async function loadHistory(id) {
+  historyLoading.value = true;
+  historyError.value = '';
+  try {
+    const response = await getAssetHistory(id, { page: 1, limit: 100 });
+    historyRecords.value = response.data || [];
+  } catch (err) {
+    historyError.value = errorMessage(err, 'Unable to load asset history.');
+    historyRecords.value = [];
+  } finally {
+    historyLoading.value = false;
+  }
+}
+
+async function loadAsset(id) {
+  loading.value = true;
+  error.value = '';
+  asset.value = null;
+  try {
+    const response = await getAsset(id);
+    asset.value = response.data || null;
+    if (asset.value?.assetTag) {
+      app.setPageTitle(asset.value.assetTag);
+    }
+    await loadHistory(id);
+  } catch (err) {
+    error.value = errorMessage(err, 'Unable to load this asset.');
+  } finally {
+    loading.value = false;
+  }
+}
+
+onMounted(() => {
+  if (route.query.created === '1') {
+    banner.value = 'Asset created successfully.';
+  } else if (route.query.updated === '1') {
+    banner.value = 'Asset updated successfully.';
+  }
+  if (route.query.created || route.query.updated) {
+    router.replace({ name: 'asset-detail', params: { id: route.params.id } });
+  }
+  loadAsset(route.params.id);
+});
+
+watch(
+  () => route.params.id,
+  (id, previous) => {
+    if (id && id !== previous) {
+      banner.value = '';
+      loadAsset(id);
+    }
+  }
+);
+</script>
+
+<template>
+  <div>
+    <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <RouterLink :to="{ name: 'assets' }" class="text-sm text-navy-800 hover:underline">← Back to assets</RouterLink>
+      <RouterLink
+        v-if="canWrite && asset"
+        :to="{ name: 'asset-edit', params: { id: asset.id } }"
+        class="rounded-md bg-navy-900 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800"
+      >
+        Edit asset
+      </RouterLink>
+    </div>
+
+    <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
+    <Alert v-if="error" class="mb-4" :message="error" />
+
+    <p v-if="loading" class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
+      Loading asset…
+    </p>
+    <p
+      v-else-if="!error && !asset"
+      class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm"
+    >
+      Asset not found.
+    </p>
+
+    <div v-else-if="asset" class="space-y-4">
+      <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 class="text-lg font-semibold text-navy-950">Basic information</h2>
+        <dl class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Asset Tag</dt>
+            <dd class="mt-1 text-sm text-navy-950">{{ displayValue(asset.assetTag) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Name</dt>
+            <dd class="mt-1 text-sm text-navy-950">{{ displayValue(asset.name) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Category</dt>
+            <dd class="mt-1 text-sm text-navy-950">{{ displayValue(asset.category?.name) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Status</dt>
+            <dd class="mt-1">
+              <span
+                class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium"
+                :style="statusStyle(asset.status)"
+              >
+                {{ asset.status?.name || '—' }}
+              </span>
+            </dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Description</dt>
+            <dd class="mt-1 text-sm whitespace-pre-wrap text-navy-950">{{ displayValue(asset.notes) }}</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 class="text-lg font-semibold text-navy-950">Location</h2>
+        <dl class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Municipality</dt>
+            <dd class="mt-1 text-sm text-navy-950">{{ displayValue(asset.municipality?.name) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">School</dt>
+            <dd class="mt-1 text-sm text-navy-950">{{ displayValue(asset.school?.name) }}</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 class="text-lg font-semibold text-navy-950">Purchase information</h2>
+        <dl class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Cost</dt>
+            <dd class="mt-1 text-sm text-navy-950">{{ formatCurrency(asset.purchaseCost) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Date</dt>
+            <dd class="mt-1 text-sm text-navy-950">{{ formatDate(asset.purchaseDate) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Vendor</dt>
+            <dd class="mt-1 text-sm text-navy-950">{{ displayValue(asset.vendor) }}</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 class="text-lg font-semibold text-navy-950">Additional</h2>
+        <dl class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div class="sm:col-span-2">
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">QR Code</dt>
+            <dd class="mt-2">
+              <img
+                v-if="asset.qrCode"
+                :src="qrImageSrc(asset.qrCode)"
+                alt="Asset QR code"
+                class="h-40 w-40 rounded-md border border-slate-200 bg-white p-2"
+              />
+              <p v-else class="text-sm text-slate-500">No QR code available.</p>
+              <p v-if="asset.qrCode" class="mt-2 text-xs break-all text-slate-500">{{ asset.qrCode }}</p>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Created At</dt>
+            <dd class="mt-1 text-sm text-navy-950">{{ formatDateTime(asset.createdAt) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Updated At</dt>
+            <dd class="mt-1 text-sm text-navy-950">{{ formatDateTime(asset.updatedAt) }}</dd>
+          </div>
+        </dl>
+      </section>
+
+      <AssetHistory :records="historyRecords" :loading="historyLoading" :error="historyError" />
+    </div>
+  </div>
+</template>

@@ -24,8 +24,26 @@ const routes = [
       {
         path: 'assets',
         name: 'assets',
-        component: () => import('@/pages/ComingSoon.vue'),
+        component: () => import('@/pages/assets/AssetListPage.vue'),
         meta: { requiresAuth: true, title: 'Assets' },
+      },
+      {
+        path: 'assets/create',
+        name: 'asset-create',
+        component: () => import('@/pages/assets/AssetCreatePage.vue'),
+        meta: { requiresAuth: true, title: 'Create asset', permission: 'assets:write' },
+      },
+      {
+        path: 'assets/:id/edit',
+        name: 'asset-edit',
+        component: () => import('@/pages/assets/AssetEditPage.vue'),
+        meta: { requiresAuth: true, title: 'Edit asset', permission: 'assets:write' },
+      },
+      {
+        path: 'assets/:id',
+        name: 'asset-detail',
+        component: () => import('@/pages/assets/AssetDetailPage.vue'),
+        meta: { requiresAuth: true, title: 'Asset details' },
       },
       {
         path: 'maintenance',
