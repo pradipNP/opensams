@@ -11,6 +11,7 @@ function assetFrom() {
 function transferFrom() {
   return `
     FROM asset_transfers t
+    INNER JOIN assets a ON a.id = t.asset_id
     INNER JOIN schools from_s ON from_s.id = t.from_school_id
     INNER JOIN schools to_s ON to_s.id = t.to_school_id
   `;
@@ -145,8 +146,10 @@ async function getKpis(user, filters = {}) {
           COUNT(*) FILTER (WHERE mr.status = 'pending')::int AS pending_maintenance,
           COUNT(*) FILTER (WHERE mr.status = 'completed')::int AS completed_maintenance
        FROM maintenance_requests mr
+       INNER JOIN assets a ON a.id = mr.asset_id
        INNER JOIN schools s ON s.id = mr.school_id
-       WHERE ${schoolWhere}`,
+       WHERE a.deleted_at IS NULL
+         AND ${schoolWhere}`,
       schoolParams
     ),
     db.query(
@@ -155,7 +158,8 @@ async function getKpis(user, filters = {}) {
           COUNT(*) FILTER (WHERE t.status = 'approved')::int AS approved_transfers,
           COUNT(*) FILTER (WHERE t.status = 'completed')::int AS completed_transfers
        ${transferFrom()}
-       WHERE ${transferWhere}`,
+       WHERE a.deleted_at IS NULL
+         AND ${transferWhere}`,
       transferParams
     ),
   ]);
@@ -172,7 +176,7 @@ async function countMunicipalities(user, filters = {}) {
   const scope = buildMunicipalityScope(user);
   const params = [...scope.params];
   const extra = extraMunicipalityClauses(filters, params, scope.nextIndex);
-  const where = combineWhere(scope.clause, extra.clauses);
+  const where = combineWhere(scope.clause, ['m.is_active = TRUE', ...extra.clauses]);
 
   const result = await db.query(
     `SELECT COUNT(*)::int AS total
@@ -234,7 +238,7 @@ async function assetsBySchool(user, filters = {}) {
   const scope = buildSchoolScope(user);
   const params = [...scope.params];
   const extra = extraSchoolClauses(filters, params, scope.nextIndex);
-  const where = combineWhere(scope.clause, extra.clauses);
+  const where = combineWhere(scope.clause, ['s.is_active = TRUE', ...extra.clauses]);
 
   const result = await db.query(
     `SELECT
@@ -279,7 +283,7 @@ async function transfersByStatus(user, filters = {}) {
   const scope = buildTransferScope(user);
   const params = [...scope.params];
   const extra = extraTransferClauses(filters, params, scope.nextIndex);
-  const where = combineWhere(scope.clause, extra.clauses);
+  const where = combineWhere(scope.clause, ['a.deleted_at IS NULL', ...extra.clauses]);
 
   const result = await db.query(
     `SELECT

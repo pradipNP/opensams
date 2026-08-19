@@ -101,7 +101,7 @@ async function list(user, filters) {
   const scope = buildTransferScope(user);
   const params = [...scope.params];
   const extra = appendFilters(filters, params, scope.nextIndex);
-  const where = [scope.clause, ...extra.clauses].join(' AND ');
+  const where = [scope.clause, 'a.deleted_at IS NULL', ...extra.clauses].join(' AND ');
 
   const countResult = await db.query(
     `SELECT COUNT(*)::int AS total

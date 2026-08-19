@@ -147,7 +147,7 @@ async function listMunicipalityReport(user, filters) {
   const scope = buildMunicipalityScope(user);
   const params = [...scope.params];
   const extra = appendMunicipalityFilters(filters, params, scope.nextIndex);
-  const where = [scope.clause, ...extra.clauses].join(' AND ');
+  const where = [scope.clause, 'm.is_active = TRUE', ...extra.clauses].join(' AND ');
 
   const countResult = await db.query(
     `SELECT COUNT(*)::int AS total
@@ -219,7 +219,7 @@ async function listSchoolReport(user, filters) {
   const scope = buildSchoolScope(user);
   const params = [...scope.params];
   const extra = appendSchoolFilters(filters, params, scope.nextIndex);
-  const where = [scope.clause, ...extra.clauses].join(' AND ');
+  const where = [scope.clause, 's.is_active = TRUE', ...extra.clauses].join(' AND ');
 
   const countResult = await db.query(
     `SELECT COUNT(*)::int AS total
@@ -366,7 +366,7 @@ async function listMaintenanceReport(user, filters) {
   const scope = buildSchoolScope(user);
   const params = [...scope.params];
   const extra = appendMaintenanceFilters(filters, params, scope.nextIndex);
-  const where = [scope.clause, ...extra.clauses].join(' AND ');
+  const where = [scope.clause, 'a.deleted_at IS NULL', ...extra.clauses].join(' AND ');
 
   const countResult = await db.query(
     `SELECT COUNT(*)::int AS total
@@ -500,7 +500,7 @@ async function listTransferReport(user, filters) {
   const scope = buildTransferScope(user);
   const params = [...scope.params];
   const extra = appendTransferFilters(filters, params, scope.nextIndex);
-  const where = [scope.clause, ...extra.clauses].join(' AND ');
+  const where = [scope.clause, 'a.deleted_at IS NULL', ...extra.clauses].join(' AND ');
 
   const countResult = await db.query(
     `SELECT COUNT(*)::int AS total
