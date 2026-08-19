@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAMS Nepal — Architecture Plan</title>
+  <style>
+    @page { margin: 20mm 18mm; size: A4; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.55;
+      color: #1e293b;
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 24px 32px;
+      background: #fff;
+    }
+    h1 {
+      font-size: 22pt;
+      color: #1e40af;
+      border-bottom: 3px solid #2563eb;
+      padding-bottom: 8px;
+      margin-top: 0;
+      page-break-after: avoid;
+    }
+    h2 {
+      font-size: 14pt;
+      color: #1e3a8a;
+      margin-top: 28px;
+      border-bottom: 1px solid #cbd5e1;
+      padding-bottom: 4px;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 11.5pt;
+      color: #334155;
+      margin-top: 18px;
+      page-break-after: avoid;
+    }
+    h4 { font-size: 10.5pt; color: #475569; margin-top: 14px; }
+    p { margin: 8px 0; }
+    ul, ol { margin: 8px 0; padding-left: 22px; }
+    li { margin: 4px 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #eff6ff; color: #1e40af; font-weight: 600; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    pre, code {
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      font-size: 8.5pt;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+    }
+    pre {
+      padding: 12px 14px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      page-break-inside: avoid;
+    }
+    code { padding: 1px 4px; }
+    .cover {
+      text-align: center;
+      padding: 60px 20px 40px;
+      page-break-after: always;
+    }
+    .cover h1 { border: none; font-size: 28pt; margin-bottom: 8px; }
+    .cover .subtitle { font-size: 14pt; color: #64748b; margin-bottom: 32px; }
+    .cover .meta { font-size: 10pt; color: #94a3b8; margin-top: 40px; }
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 9pt;
+      font-weight: 600;
+    }
+    .toc { page-break-after: always; }
+    .toc ol { list-style: decimal; }
+    .toc li { margin: 6px 0; }
+    .toc a { color: #2563eb; text-decoration: none; }
+    .note {
+      background: #fffbeb;
+      border-left: 4px solid #d97706;
+      padding: 10px 14px;
+      margin: 12px 0;
+      font-size: 9.5pt;
+    }
+    .section-num { color: #64748b; font-weight: normal; }
+    hr { border: none; border-top: 1px solid #e2e8f0; margin: 24px 0; }
+    .check { color: #16a34a; }
+    .dash { color: #94a3b8; }
+    @media print {
+      body { padding: 0; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>SAMS Nepal</h1>
+  <div class="subtitle">School Asset Management System<br>Architecture &amp; Foundation Plan</div>
+  <p><span class="badge">Enterprise Architecture Document</span></p>
+  <p style="margin-top:24px; font-size:11pt; color:#475569;">
+    A centralized Government School Asset Management System for Nepal.<br>
+    Portfolio-quality project inspired by real enterprise asset management software.
+  </p>
+  <div class="meta">
+    Document Version: 1.0<br>
+    Date: August 18, 2026<br>
+    Status: Pending Approval
+  </div>
+</div>
+
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#s1">Reference Project Analysis</a></li>
+    <li><a href="#s2">Conceptual Patterns to Reuse</a></li>
+    <li><a href="#s3">Improvements Over Reference</a></li>
+    <li><a href="#s4">Proposed Project Structure</a></li>
+    <li><a href="#s5">Database Schema</a></li>
+    <li><a href="#s6">Backend API Structure</a></li>
+    <li><a href="#s7">Frontend Routing Structure</a></li>
+    <li><a href="#s8">Role-Based Access Architecture</a></li>
+    <li><a href="#s9">UI Design System</a></li>
+    <li><a href="#s10">Deployment Architecture</a></li>
+    <li><a href="#s11">Implementation Phases</a></li>
+    <li><a href="#s12">Decisions Needing Approval</a></li>
+    <li><a href="#s13">Tech Stack Summary</a></li>
+  </ol>
+</div>
+
+<h2 id="s1"><span class="section-num">1.</span> Reference Project Analysis (Updated/)</h2>
+
+<h3>Current Structure</h3>
+<pre>Updated/
+├── frontend/
+│   ├── index.html          # ~27,000 lines — single-file SPA
+│   └── Dockerfile          # nginx static serve
+├── backend/
+│   ├── server.js           # Express entry, route mounting
+│   ├── db.js               # Hardcoded pg Pool
+│   ├── routes/
+│   │   ├── tmi.js          # ~900 lines — full CRUD + import + audit
+│   │   ├── testInfra.js
+│   │   ├── officeInfra.js
+│   │   └── calibration.js
+│   └── Dockerfile
+├── database/
+│   └── init.sql            # 3 duplicate asset tables + history/audit/service
+└── docker-compose.yml      # postgres + backend + frontend</pre>
+
+<h3>Reference Characteristics</h3>
+<ul>
+  <li><strong>Frontend:</strong> Single monolithic HTML file (~27K lines) with inline CSS and JavaScript — no framework, no component modularity.</li>
+  <li><strong>Backend:</strong> Express.js with route-per-domain pattern; duplicated CRUD logic across TMI, Test Infra, and Office Infra routes.</li>
+  <li><strong>Database:</strong> Three separate asset tables with SERIAL primary keys; no users/auth tables; JSON payload columns for flexibility.</li>
+  <li><strong>Authentication:</strong> Client-side only with hardcoded user array; no JWT, no backend security.</li>
+  <li><strong>Layout:</strong> Collapsible sidebar, top header, page switching via showPage/showSubPage functions, login screen overlay.</li>
+  <li><strong>Features:</strong> Asset CRUD, search, bulk Excel import, audit records, service records, history, modals, wizards, KPI stat cards, filtered tables, reporting.</li>
+  <li><strong>Docker:</strong> Three-service stack — PostgreSQL, backend, nginx frontend.</li>
+</ul>
+
+<h2 id="s2"><span class="section-num">2.</span> Conceptual Patterns to Reuse</h2>
+
+<table>
+  <tr><th>Pattern</th><th>Reference Implementation</th><th>SAMS Application</th></tr>
+  <tr><td>Layout shell</td><td>Collapsible sidebar + top header + main content</td><td>Same shell, rebuilt in Vue components</td></tr>
+  <tr><td>Page routing</td><td>showPage() / showSubPage() toggles .page.active</td><td>Vue Router with nested routes</td></tr>
+  <tr><td>Navigation groups</td><td>Expandable sidebar sections</td><td>Role-filtered nav groups</td></tr>
+  <tr><td>Login gate</td><td>Full-screen login overlay before app shell</td><td>Dedicated /login route + auth guard</td></tr>
+  <tr><td>Dashboard KPIs</td><td>.stat-card grid with color-coded metrics</td><td>Pinia-driven KPI cards + Chart.js</td></tr>
+  <tr><td>Asset tables</td><td>Search, column filters, pagination, modal CRUD</td><td>Reusable DataTable + AssetFormModal</td></tr>
+  <tr><td>Add asset flow</td><td>Method picker → wizard OR Excel import</td><td>Modal form first; import in Phase 2</td></tr>
+  <tr><td>Audit trail</td><td>Separate history/audit/service record tables</td><td>Unified asset_history + future maintenance module</td></tr>
+  <tr><td>Docker dev stack</td><td>postgres → backend → nginx frontend</td><td>Same topology, env-driven config</td></tr>
+</table>
+
+<h2 id="s3"><span class="section-num">3.</span> Improvements Over Reference</h2>
+
+<table>
+  <tr><th>Area</th><th>Reference Problem</th><th>SAMS Improvement</th></tr>
+  <tr><td>Frontend</td><td>27K-line monolith, no framework, unmaintainable</td><td>Vue 3 + Vite modular architecture</td></tr>
+  <tr><td>Auth</td><td>Client-side hardcoded users, no API security</td><td>JWT + bcrypt + server-side RBAC</td></tr>
+  <tr><td>Database</td><td>3 duplicate asset tables, SERIAL IDs, no FK relations</td><td>Single normalized assets table, UUID PKs</td></tr>
+  <tr><td>Domain model</td><td>Industrial lab assets (TMI/Test Infra)</td><td>Government school hierarchy (State → Municipality → School)</td></tr>
+  <tr><td>Multi-tenancy</td><td>None</td><td>Role-scoped data filtering by municipality/school</td></tr>
+  <tr><td>Config</td><td>Hardcoded DB credentials in db.js</td><td>Environment variables (.env, Neon, Render)</td></tr>
+  <tr><td>API design</td><td>Fat route files, no validation layer</td><td>Controllers → Services → Repositories</td></tr>
+  <tr><td>Styling</td><td>5,000+ lines inline CSS, theme variants</td><td>Tailwind CSS with design tokens</td></tr>
+  <tr><td>Type safety</td><td>None</td><td>JSDoc or optional TypeScript in backend</td></tr>
+  <tr><td>Testing</td><td>None</td><td>Testable service layer from day one</td></tr>
+</table>
+
+<h2 id="s4"><span class="section-num">4.</span> Proposed Project Structure</h2>
+
+<pre>Asset-Management/
+├── frontend/                          # Vue 3 SPA → Cloudflare Pages
+│   ├── public/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   │   ├── layout/                # AppLayout, AppSidebar, AppHeader
+│   │   │   ├── ui/                    # BaseButton, BaseCard, BaseModal, etc.
+│   │   │   ├── dashboard/             # KpiCard, Charts
+│   │   │   ├── assets/                # AssetTable, AssetFilters, AssetFormModal
+│   │   │   └── schools/               # MunicipalityList, SchoolCard
+│   │   ├── composables/               # useAuth, usePermissions, useApi
+│   │   ├── layouts/                   # AuthLayout, DashboardLayout
+│   │   ├── router/                    # Routes + guards + meta.roles
+│   │   ├── stores/                    # auth, ui, dashboard (Pinia)
+│   │   ├── services/                  # API service modules
+│   │   ├── views/                     # Page views by module
+│   │   ├── App.vue, main.js, style.css
+│   ├── index.html, vite.config.js, tailwind.config.js, package.json
+│
+├── backend/                           # Express API → Render
+│   ├── src/
+│   │   ├── config/                    # Env loader, database pool
+│   │   ├── middleware/                # auth, authorize, validate, errorHandler
+│   │   ├── routes/                    # Route definitions
+│   │   ├── controllers/               # Request handlers
+│   │   ├── services/                  # Business logic
+│   │   ├── repositories/              # SQL queries
+│   │   ├── utils/                     # jwt, password, scope
+│   │   ├── constants/                 # roles, permissions
+│   │   └── app.js
+│   ├── server.js, Dockerfile, package.json
+│
+├── database/
+│   ├── schema/                        # 001–009 migration SQL files
+│   ├── seeds/                         # Roles, municipalities, schools, categories
+│   └── migrations/                    # Future: node-pg-migrate
+│
+├── docker-compose.yml
+├── .gitignore
+└── README.md</pre>
+
+<h2 id="s5"><span class="section-num">5.</span> Database Schema</h2>
+
+<h3>Core Tables</h3>
+<table>
+  <tr><th>Table</th><th>Purpose</th><th>Key Fields</th></tr>
+  <tr><td>roles</td><td>User role definitions</td><td>id (UUID), name, permissions (JSONB)</td></tr>
+  <tr><td>municipalities</td><td>Local government units</td><td>id, name, province, district</td></tr>
+  <tr><td>schools</td><td>Government schools</td><td>id, municipality_id (FK), name, school_code</td></tr>
+  <tr><td>users</td><td>System users</td><td>id, role_id, municipality_id, school_id, email, password_hash</td></tr>
+  <tr><td>asset_categories</td><td>Asset classification</td><td>id, name, department</td></tr>
+  <tr><td>asset_statuses</td><td>Asset lifecycle states</td><td>id, name, color_code, sort_order</td></tr>
+  <tr><td>assets</td><td>School assets</td><td>id, asset_tag, name, category_id, school_id, status_id, purchase_cost, etc.</td></tr>
+</table>
+
+<h3>Entity Relationships</h3>
+<ul>
+  <li>roles → users (one-to-many)</li>
+  <li>municipalities → schools (one-to-many)</li>
+  <li>municipalities → users (one-to-many, for municipal officers)</li>
+  <li>schools → users (one-to-many, for school admins)</li>
+  <li>schools → assets (one-to-many)</li>
+  <li>asset_categories → assets (one-to-many)</li>
+  <li>asset_statuses → assets (one-to-many)</li>
+  <li>users → assets (created_by reference)</li>
+</ul>
+
+<h3>Asset Fields</h3>
+<table>
+  <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+  <tr><td>asset_tag</td><td>VARCHAR(50) UNIQUE</td><td>Human-readable asset identifier</td></tr>
+  <tr><td>name</td><td>VARCHAR(300)</td><td>Asset name</td></tr>
+  <tr><td>category_id</td><td>UUID FK</td><td>Asset category</td></tr>
+  <tr><td>school_id</td><td>UUID FK</td><td>Owning school</td></tr>
+  <tr><td>status_id</td><td>UUID FK</td><td>Current status</td></tr>
+  <tr><td>department</td><td>VARCHAR(100)</td><td>Department within school</td></tr>
+  <tr><td>location</td><td>VARCHAR(200)</td><td>Physical location</td></tr>
+  <tr><td>purchase_date</td><td>DATE</td><td>Date of purchase</td></tr>
+  <tr><td>purchase_cost</td><td>NUMERIC(12,2)</td><td>Purchase cost in NPR</td></tr>
+  <tr><td>warranty_expiry</td><td>DATE</td><td>Warranty expiration</td></tr>
+  <tr><td>vendor</td><td>VARCHAR(200)</td><td>Supplier/vendor name</td></tr>
+  <tr><td>deleted_at</td><td>TIMESTAMPTZ</td><td>Soft delete timestamp</td></tr>
+</table>
+
+<h3>Seed Data Summary</h3>
+<table>
+  <tr><th>Seed File</th><th>Records</th></tr>
+  <tr><td>001_roles.sql</td><td>3 roles: state_admin, municipal_officer, school_admin</td></tr>
+  <tr><td>002_municipalities.sql</td><td>3 municipalities (Butwal, Siddharthanagar, Lumbini Sanskritik)</td></tr>
+  <tr><td>003_schools.sql</td><td>27 schools across 3 municipalities</td></tr>
+  <tr><td>004_asset_categories.sql</td><td>8 parent categories + 28 sub-items</td></tr>
+  <tr><td>005_asset_statuses.sql</td><td>Active, Damaged, Under Maintenance, Disposed, Lost</td></tr>
+  <tr><td>006_demo_users.sql</td><td>1 demo user per role for development</td></tr>
+</table>
+
+<h3>Municipalities &amp; Schools (Seed Data)</h3>
+
+<h4>1. Butwal Sub-Metropolitan City (10 schools)</h4>
+<ul>
+  <li>Kalika Manavgyan Secondary School</li>
+  <li>Kanti Secondary School</li>
+  <li>Naharpur Secondary School</li>
+  <li>Nayagaun Secondary School</li>
+  <li>Nawa Ratna Secondary School</li>
+  <li>Nabin Audhyogic Kadar Bahadur Rita Secondary School</li>
+  <li>Jitgadi Basic School</li>
+  <li>Amar Secondary School</li>
+  <li>Sitaram Basic School</li>
+  <li>Ujyaalo Basic School</li>
+</ul>
+
+<h4>2. Siddharthanagar Municipality / Bhairahawa (7 schools)</h4>
+<ul>
+  <li>Bhairahawa Model Secondary School</li>
+  <li>Rupandehi Secondary School</li>
+  <li>Paklihawa Secondary School</li>
+  <li>Siddhartha Secondary School</li>
+  <li>Gautam Buddha Secondary School</li>
+  <li>Kanya Secondary School</li>
+  <li>Narainapur Basic School</li>
+</ul>
+
+<h4>3. Lumbini Sanskritik Municipality (10 schools)</h4>
+<ul>
+  <li>Tenuhawa Community Secondary School</li>
+  <li>Khudabagar Secondary School</li>
+  <li>Shree Masina Baba Narendra Puri Moglaha Secondary School</li>
+  <li>Balrampur Secondary School</li>
+  <li>Karmahawa Secondary School</li>
+  <li>Aama Secondary School</li>
+  <li>Nepal Rastriya Basic School</li>
+  <li>Bhagwanpur Secondary School</li>
+  <li>Sonbarsha Basic School</li>
+  <li>Mahilwar Secondary School</li>
+</ul>
+
+<h3>Asset Categories</h3>
+<table>
+  <tr><th>Department</th><th>Categories</th></tr>
+  <tr><td>Classroom Assets</td><td>Benches, Desks, Chairs, Whiteboards, Smart Boards, Projectors</td></tr>
+  <tr><td>Computer Lab Assets</td><td>Desktop Computers, Laptops, Printers, UPS, Routers</td></tr>
+  <tr><td>Library Assets</td><td>Books, Bookshelves, Computers</td></tr>
+  <tr><td>Science Lab Assets</td><td>Microscopes, Lab Equipment</td></tr>
+  <tr><td>Sports Assets</td><td>Footballs, Cricket Kits, Volleyball Equipment</td></tr>
+  <tr><td>Office Assets</td><td>Computers, Printers, Tables, Chairs</td></tr>
+  <tr><td>Infrastructure Assets</td><td>CCTV Cameras, Water Coolers, Solar Panels, Generators</td></tr>
+</table>
+
+<h2 id="s6"><span class="section-num">6.</span> Backend API Structure</h2>
+
+<h3>Base URL</h3>
+<pre>Production:  https://sams-api.onrender.com/api/v1
+Development: http://localhost:5000/api/v1</pre>
+
+<h3>Endpoint Map</h3>
+<table>
+  <tr><th>Method</th><th>Endpoint</th><th>Access</th></tr>
+  <tr><td>POST</td><td>/auth/login</td><td>Public</td></tr>
+  <tr><td>POST</td><td>/auth/logout</td><td>Authenticated</td></tr>
+  <tr><td>GET</td><td>/auth/me</td><td>Authenticated</td></tr>
+  <tr><td>GET</td><td>/dashboard/kpis</td><td>All roles (scoped)</td></tr>
+  <tr><td>GET</td><td>/dashboard/charts/municipality</td><td>State Admin, Municipal Officer</td></tr>
+  <tr><td>GET</td><td>/dashboard/charts/category</td><td>All roles (scoped)</td></tr>
+  <tr><td>GET</td><td>/dashboard/charts/status</td><td>All roles (scoped)</td></tr>
+  <tr><td>GET/POST/PUT</td><td>/municipalities</td><td>State Admin</td></tr>
+  <tr><td>GET/POST/PUT</td><td>/schools</td><td>Scoped by role</td></tr>
+  <tr><td>GET/POST/PUT/DELETE</td><td>/assets</td><td>Scoped by role</td></tr>
+  <tr><td>GET/POST/PUT</td><td>/categories</td><td>Read: all; Write: State Admin</td></tr>
+  <tr><td>GET/POST/PUT/DELETE</td><td>/users</td><td>State Admin</td></tr>
+  <tr><td>GET</td><td>/reports/*</td><td>Scoped by role</td></tr>
+</table>
+
+<h3>Request/Response Conventions</h3>
+<pre>// Success envelope
+{ "success": true, "data": { ... }, "meta": { "page": 1, "limit": 20, "total": 142 } }
+
+// Error envelope
+{ "success": false, "error": { "code": "FORBIDDEN", "message": "..." } }
+
+// Asset list query params
+GET /assets?page=1&limit=20&search=projector&category_id=uuid&status_id=uuid</pre>
+
+<h3>Backend Layer Flow</h3>
+<pre>Request
+  → auth.middleware        (verify JWT)
+  → authorize.middleware   (check role + permission)
+  → validate.middleware    (express-validator)
+  → controller             (parse req, call service, send res)
+  → service                (business logic, scope filtering)
+  → repository             (parameterized SQL queries)
+  → PostgreSQL</pre>
+
+<h2 id="s7"><span class="section-num">7.</span> Frontend Routing Structure</h2>
+
+<h3>Route Tree</h3>
+<pre>/                           → redirect to /dashboard or /login
+/login                      → LoginView                    [guest only]
+/dashboard                  → DashboardView                [all roles]
+/assets                     → AssetListView                [all roles, scoped]
+/assets/:id                 → AssetDetailView              [all roles, scoped]
+/schools                    → MunicipalityListView         [state_admin, municipal_officer]
+/schools/municipality/:id   → SchoolListView               [state_admin, municipal_officer]
+/schools/:id                → SchoolDetailView             [all roles, scoped]
+/reports                    → ReportsView                  [all roles, scoped]
+/users                      → UserManagementView           [state_admin]
+/categories                 → CategoryManagementView       [state_admin]</pre>
+
+<h3>Navigation by Role</h3>
+<table>
+  <tr><th>Nav Item</th><th>State Admin</th><th>Municipal Officer</th><th>School Admin</th></tr>
+  <tr><td>Dashboard</td><td>✓</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Assets</td><td>✓ (all)</td><td>✓ (municipality)</td><td>✓ (own school)</td></tr>
+  <tr><td>Schools</td><td>✓</td><td>✓ (own municipality)</td><td>✓ (own school)</td></tr>
+  <tr><td>Reports</td><td>✓</td><td>✓</td><td>✓</td></tr>
+  <tr><td>Users</td><td>✓</td><td>—</td><td>—</td></tr>
+  <tr><td>Categories</td><td>✓</td><td>—</td><td>—</td></tr>
+</table>
+
+<h2 id="s8"><span class="section-num">8.</span> Role-Based Access Architecture</h2>
+
+<h3>User Roles &amp; Permissions</h3>
+
+<h4>1. State Administrator</h4>
+<ul>
+  <li>Manage all districts and municipalities</li>
+  <li>Manage all schools</li>
+  <li>View all assets</li>
+  <li>View analytics and generate reports</li>
+  <li>Manage users and asset categories</li>
+</ul>
+
+<h4>2. Municipal Officer</h4>
+<ul>
+  <li>View schools inside assigned municipality</li>
+  <li>Audit assets within municipality</li>
+  <li>Approve maintenance requests (Phase 2)</li>
+  <li>Generate municipality reports</li>
+</ul>
+
+<h4>3. School Administrator</h4>
+<ul>
+  <li>Manage school assets (own school only)</li>
+  <li>Add, edit assets</li>
+  <li>Create maintenance requests (Phase 2)</li>
+  <li>View school reports</li>
+</ul>
+
+<h3>Permission Constants</h3>
+<pre>PERMISSIONS:
+  municipalities:read, municipalities:write
+  schools:read, schools:write
+  assets:read, assets:write, assets:delete
+  categories:write
+  users:read, users:write
+  reports:read, dashboard:read
+  maintenance:approve (Phase 2)</pre>
+
+<h3>Data Scoping Strategy</h3>
+<table>
+  <tr><th>Role</th><th>SQL Scope Clause</th></tr>
+  <tr><td>state_admin</td><td>No filter — access all data</td></tr>
+  <tr><td>municipal_officer</td><td>s.municipality_id = user.municipality_id</td></tr>
+  <tr><td>school_admin</td><td>a.school_id = user.school_id</td></tr>
+</table>
+
+<h3>JWT Payload</h3>
+<pre>{
+  "sub": "user-uuid",
+  "email": "admin@sams.gov.np",
+  "role": "state_admin",
+  "municipality_id": null,
+  "school_id": null,
+  "iat": 1700000000,
+  "exp": 1700086400
+}</pre>
+
+<h2 id="s9"><span class="section-num">9.</span> UI Design System</h2>
+
+<h3>Design Principles</h3>
+<ul>
+  <li>Modern, professional, clean government-enterprise grade appearance</li>
+  <li>Left collapsible sidebar + top navigation header + main content area</li>
+  <li>Responsive design for desktop, tablet, and mobile</li>
+  <li>Card-based dashboard with proper spacing and consistent typography</li>
+  <li>Enterprise tables and professional forms with subtle animations only</li>
+</ul>
+
+<h3>Color Palette</h3>
+<table>
+  <tr><th>Token</th><th>Value</th><th>Usage</th></tr>
+  <tr><td>Primary 500</td><td>#2563EB</td><td>Brand, buttons, links</td></tr>
+  <tr><td>Primary 700</td><td>#1D4ED8</td><td>Hover states</td></tr>
+  <tr><td>Slate 50</td><td>#F8FAFC</td><td>Page background</td></tr>
+  <tr><td>Slate 900</td><td>#0F172A</td><td>Sidebar background</td></tr>
+  <tr><td>Success</td><td>#16A34A</td><td>Active status</td></tr>
+  <tr><td>Warning</td><td>#D97706</td><td>Maintenance status</td></tr>
+  <tr><td>Danger</td><td>#DC2626</td><td>Damaged status</td></tr>
+</table>
+
+<h3>Layout Dimensions</h3>
+<table>
+  <tr><th>Element</th><th>Size</th></tr>
+  <tr><td>Sidebar (expanded)</td><td>240px</td></tr>
+  <tr><td>Sidebar (collapsed)</td><td>64px</td></tr>
+  <tr><td>Header height</td><td>56px</td></tr>
+  <tr><td>Content max-width</td><td>1440px</td></tr>
+  <tr><td>Card border-radius</td><td>8px</td></tr>
+  <tr><td>Font family</td><td>Inter (Google Fonts)</td></tr>
+</table>
+
+<h3>Visual Differentiation from Reference</h3>
+<table>
+  <tr><th>Aspect</th><th>Reference (Updated/)</th><th>SAMS Nepal</th></tr>
+  <tr><td>Sidebar</td><td>White background</td><td>Dark slate-900 sidebar</td></tr>
+  <tr><td>Cards</td><td>Flat with colored stat dots</td><td>White cards with shadow + accent border</td></tr>
+  <tr><td>Tables</td><td>Dense inline filter bars</td><td>Spacious rows, sticky header, external filters</td></tr>
+  <tr><td>Typography</td><td>IBM Plex Sans</td><td>Inter</td></tr>
+  <tr><td>Login</td><td>Centered card on gradient</td><td>Split-panel: branding left, form right</td></tr>
+  <tr><td>Icons</td><td>Inline SVG strings</td><td>Heroicons via @heroicons/vue</td></tr>
+</table>
+
+<h3>Dashboard KPIs</h3>
+<ul>
+  <li>Total Assets</li>
+  <li>Active Assets</li>
+  <li>Damaged Assets</li>
+  <li>Under Maintenance</li>
+  <li>Total Schools</li>
+  <li>Total Asset Value</li>
+</ul>
+
+<h3>Dashboard Charts</h3>
+<ul>
+  <li>Assets by Municipality (bar chart)</li>
+  <li>Assets by Category (donut chart)</li>
+  <li>Asset Status Distribution (pie chart)</li>
+</ul>
+
+<h2 id="s10"><span class="section-num">10.</span> Deployment Architecture</h2>
+
+<h3>Production Stack</h3>
+<table>
+  <tr><th>Component</th><th>Platform</th><th>Notes</th></tr>
+  <tr><td>Frontend (Vue 3 SPA)</td><td>Cloudflare Pages</td><td>Static build from Vite</td></tr>
+  <tr><td>Backend (Express API)</td><td>Render</td><td>Web service with health check</td></tr>
+  <tr><td>Database (PostgreSQL)</td><td>Neon</td><td>Serverless Postgres with SSL</td></tr>
+  <tr><td>Local Development</td><td>Docker Compose</td><td>postgres:16 + backend + Vite dev</td></tr>
+</table>
+
+<h3>Environment Variables</h3>
+<pre>Frontend (.env):
+  VITE_API_BASE_URL=https://sams-api.onrender.com/api/v1
+
+Backend (.env):
+  NODE_ENV=production
+  PORT=5000
+  DATABASE_URL=postgresql://user:pass@ep-xxx.neon.tech/sams?sslmode=require
+  JWT_SECRET=&lt;random-256-bit&gt;
+  JWT_EXPIRES_IN=24h
+  CORS_ORIGIN=https://sams-nepal.pages.dev</pre>
+
+<h2 id="s11"><span class="section-num">11.</span> Implementation Phases</h2>
+
+<table>
+  <tr><th>Phase</th><th>Scope</th><th>Deliverables</th></tr>
+  <tr>
+    <td><strong>Phase 1 — Foundation</strong></td>
+    <td>Project scaffolding</td>
+    <td>Folder structure, Docker, DB schema + seeds, auth API, login page, app shell</td>
+  </tr>
+  <tr>
+    <td><strong>Phase 2 — Core Modules</strong></td>
+    <td>Dashboard + Assets + Schools</td>
+    <td>KPIs, charts, asset CRUD, school listing, scoped queries</td>
+  </tr>
+  <tr>
+    <td><strong>Phase 3 — Admin</strong></td>
+    <td>Users + Categories + Reports</td>
+    <td>User management, category CRUD, CSV export</td>
+  </tr>
+  <tr>
+    <td><strong>Phase 4 — Polish</strong></td>
+    <td>Production readiness</td>
+    <td>Error handling, loading states, responsive QA, deployment configs</td>
+  </tr>
+</table>
+
+<h2 id="s12"><span class="section-num">12.</span> Decisions Needing Approval</h2>
+
+<div class="note">
+  The following decisions should be confirmed before implementation begins.
+</div>
+
+<ol>
+  <li><strong>Sidebar style</strong> — Dark sidebar (slate-900) vs. light sidebar (white, like reference)?</li>
+  <li><strong>Asset tag format</strong> — Auto-generated (SAMS-BTW-2026-0001) or manual entry?</li>
+  <li><strong>Maintenance module</strong> — Include maintenance_requests table in Phase 1 schema (empty), or defer to Phase 2?</li>
+  <li><strong>Demo users</strong> — Seed with bcrypt passwords for all 3 roles?</li>
+  <li><strong>Chart library</strong> — Chart.js (lightweight) or ApexCharts (richer)?</li>
+  <li><strong>Monorepo root</strong> — Create frontend/, backend/, database/ at project root (alongside Updated/), or replace Updated/?</li>
+</ol>
+
+<h2 id="s13"><span class="section-num">13.</span> Tech Stack Summary</h2>
+
+<table>
+  <tr><th>Layer</th><th>Technology</th></tr>
+  <tr><td>Frontend Framework</td><td>Vue 3</td></tr>
+  <tr><td>Build Tool</td><td>Vite</td></tr>
+  <tr><td>Routing</td><td>Vue Router</td></tr>
+  <tr><td>State Management</td><td>Pinia</td></tr>
+  <tr><td>CSS Framework</td><td>Tailwind CSS</td></tr>
+  <tr><td>Charts</td><td>Chart.js</td></tr>
+  <tr><td>Icons</td><td>@heroicons/vue</td></tr>
+  <tr><td>Backend Runtime</td><td>Node.js</td></tr>
+  <tr><td>Backend Framework</td><td>Express.js</td></tr>
+  <tr><td>Database</td><td>PostgreSQL (UUID primary keys)</td></tr>
+  <tr><td>Authentication</td><td>JWT + bcrypt</td></tr>
+  <tr><td>Containerization</td><td>Docker / Docker Compose</td></tr>
+  <tr><td>Frontend Deployment</td><td>Cloudflare Pages</td></tr>
+  <tr><td>Backend Deployment</td><td>Render</td></tr>
+  <tr><td>Database Hosting</td><td>Neon PostgreSQL</td></tr>
+</table>
+
+<hr>
+<p style="text-align:center; color:#94a3b8; font-size:9pt; margin-top:32px;">
+  SAMS Nepal — School Asset Management System · Architecture Plan v1.0 · August 2026
+</p>
+
+</body>
+</html>

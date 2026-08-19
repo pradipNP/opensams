@@ -1,0 +1,37 @@
+-- SAMS Nepal — Seed 004: Schools (27 schools across 3 municipalities)
+
+-- Butwal Sub-Metropolitan City (10 schools)
+INSERT INTO schools (id, municipality_id, name, school_code, school_type) VALUES
+('44444444-4444-4444-8444-444444444401', '33333333-3333-4333-8333-333333333301', 'Kalika Manavgyan Secondary School', 'BTW-KMG', 'Secondary'),
+('44444444-4444-4444-8444-444444444402', '33333333-3333-4333-8333-333333333301', 'Kanti Secondary School', 'BTW-KNT', 'Secondary'),
+('44444444-4444-4444-8444-444444444403', '33333333-3333-4333-8333-333333333301', 'Naharpur Secondary School', 'BTW-NHR', 'Secondary'),
+('44444444-4444-4444-8444-444444444404', '33333333-3333-4333-8333-333333333301', 'Nayagaun Secondary School', 'BTW-NYG', 'Secondary'),
+('44444444-4444-4444-8444-444444444405', '33333333-3333-4333-8333-333333333301', 'Nawa Ratna Secondary School', 'BTW-NWR', 'Secondary'),
+('44444444-4444-4444-8444-444444444406', '33333333-3333-4333-8333-333333333301', 'Nabin Audhyogic Kadar Bahadur Rita Secondary School', 'BTW-NAB', 'Secondary'),
+('44444444-4444-4444-8444-444444444407', '33333333-3333-4333-8333-333333333301', 'Jitgadi Basic School', 'BTW-JTG', 'Basic'),
+('44444444-4444-4444-8444-444444444408', '33333333-3333-4333-8333-333333333301', 'Amar Secondary School', 'BTW-AMR', 'Secondary'),
+('44444444-4444-4444-8444-444444444409', '33333333-3333-4333-8333-333333333301', 'Sitaram Basic School', 'BTW-STR', 'Basic'),
+('44444444-4444-4444-8444-444444444410', '33333333-3333-4333-8333-333333333301', 'Ujyaalo Basic School', 'BTW-UJY', 'Basic');
+
+-- Siddharthanagar Municipality / Bhairahawa (7 schools)
+INSERT INTO schools (id, municipality_id, name, school_code, school_type) VALUES
+('44444444-4444-4444-8444-444444444411', '33333333-3333-4333-8333-333333333302', 'Bhairahawa Model Secondary School', 'SDH-BMS', 'Secondary'),
+('44444444-4444-4444-8444-444444444412', '33333333-3333-4333-8333-333333333302', 'Rupandehi Secondary School', 'SDH-RPS', 'Secondary'),
+('44444444-4444-4444-8444-444444444413', '33333333-3333-4333-8333-333333333302', 'Paklihawa Secondary School', 'SDH-PKL', 'Secondary'),
+('44444444-4444-4444-8444-444444444414', '33333333-3333-4333-8333-333333333302', 'Siddhartha Secondary School', 'SDH-SDT', 'Secondary'),
+('44444444-4444-4444-8444-444444444415', '33333333-3333-4333-8333-333333333302', 'Gautam Buddha Secondary School', 'SDH-GBS', 'Secondary'),
+('44444444-4444-4444-8444-444444444416', '33333333-3333-4333-8333-333333333302', 'Kanya Secondary School', 'SDH-KNY', 'Secondary'),
+('44444444-4444-4444-8444-444444444417', '33333333-3333-4333-8333-333333333302', 'Narainapur Basic School', 'SDH-NRP', 'Basic');
+
+-- Lumbini Sanskritik Municipality (10 schools)
+INSERT INTO schools (id, municipality_id, name, school_code, school_type) VALUES
+('44444444-4444-4444-8444-444444444418', '33333333-3333-4333-8333-333333333303', 'Tenuhawa Community Secondary School', 'LSM-TNH', 'Secondary'),
+('44444444-4444-4444-8444-444444444419', '33333333-3333-4333-8333-333333333303', 'Khudabagar Secondary School', 'LSM-KDB', 'Secondary'),
+('44444444-4444-4444-8444-444444444420', '33333333-3333-4333-8333-333333333303', 'Shree Masina Baba Narendra Puri Moglaha Secondary School', 'LSM-MBN', 'Secondary'),
+('44444444-4444-4444-8444-444444444421', '33333333-3333-4333-8333-333333333303', 'Balrampur Secondary School', 'LSM-BLR', 'Secondary'),
+('44444444-4444-4444-8444-444444444422', '33333333-3333-4333-8333-333333333303', 'Karmahawa Secondary School', 'LSM-KRM', 'Secondary'),
+('44444444-4444-4444-8444-444444444423', '33333333-3333-4333-8333-333333333303', 'Aama Secondary School', 'LSM-AMA', 'Secondary'),
+('44444444-4444-4444-8444-444444444424', '33333333-3333-4333-8333-333333333303', 'Nepal Rastriya Basic School', 'LSM-NRB', 'Basic'),
+('44444444-4444-4444-8444-444444444425', '33333333-3333-4333-8333-333333333303', 'Bhagwanpur Secondary School', 'LSM-BGP', 'Secondary'),
+('44444444-4444-4444-8444-444444444426', '33333333-3333-4333-8333-333333333303', 'Sonbarsha Basic School', 'LSM-SNB', 'Basic'),
+('44444444-4444-4444-8444-444444444427', '33333333-3333-4333-8333-333333333303', 'Mahilwar Secondary School', 'LSM-MHW', 'Secondary');

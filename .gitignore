@@ -1,0 +1,7 @@
+node_modules/
+.env
+*.log
+.DS_Store
+Updated/node_modules/
+Updated/backend/node_modules/
+Updated/
