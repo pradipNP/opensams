@@ -11,6 +11,6 @@ export const NAV_ITEMS = [
     to: { name: 'municipalities' },
     roles: ['state_admin', 'municipal_officer'],
   },
-  { name: 'schools', label: 'Schools', to: { name: 'schools' } },
-  { name: 'categories', label: 'Categories', to: { name: 'categories' } },
+  { name: 'schools', label: 'Schools', to: { name: 'schools' }, permission: 'schools:read' },
+  { name: 'categories', label: 'Categories', to: { name: 'categories' }, permission: 'categories:read' },
 ];

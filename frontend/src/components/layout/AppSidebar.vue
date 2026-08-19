@@ -34,6 +34,18 @@ function isActive(item) {
   if (item.name === 'reports') {
     return String(route.path).startsWith('/reports');
   }
+  if (item.name === 'users') {
+    return String(route.path).startsWith('/users');
+  }
+  if (item.name === 'municipalities') {
+    return String(route.path).startsWith('/municipalities');
+  }
+  if (item.name === 'schools') {
+    return String(route.path).startsWith('/schools');
+  }
+  if (item.name === 'categories') {
+    return String(route.path).startsWith('/categories');
+  }
   return route.name === item.name;
 }
 </script>

@@ -15,3 +15,7 @@ export function listSchools(params) {
 export function listMunicipalities(params) {
   return api.get('/municipalities', { params });
 }
+
+export function listProvinces() {
+  return api.get('/provinces');
+}
