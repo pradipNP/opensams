@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
+import StatusBadge from '@/components/ui/StatusBadge.vue';
 import { formatCurrency, formatDate } from '@/utils/format';
 
 const props = defineProps({
@@ -53,19 +54,10 @@ function onSort(column) {
   }
   emit('sort', { sort: column, order: 'desc' });
 }
-
-function statusStyle(status) {
-  const color = status?.colorCode || '#64748b';
-  return {
-    color,
-    backgroundColor: `${color}22`,
-    border: `1px solid ${color}44`,
-  };
-}
 </script>
 
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+  <section class="table-shell">
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-slate-200 text-sm">
         <thead class="bg-slate-50 text-left text-xs font-semibold tracking-wide text-slate-600 uppercase">
@@ -75,7 +67,11 @@ function statusStyle(status) {
               :key="column.key"
               class="px-4 py-3 whitespace-nowrap"
               :class="column.sortable ? 'cursor-pointer select-none hover:text-navy-950' : ''"
+              :tabindex="column.sortable ? 0 : undefined"
+              :aria-sort="sort === column.key ? (order === 'asc' ? 'ascending' : 'descending') : undefined"
               @click="column.sortable && onSort(column.key)"
+              @keydown.enter.prevent="column.sortable && onSort(column.key)"
+              @keydown.space.prevent="column.sortable && onSort(column.key)"
             >
               {{ column.label }}{{ column.sortable ? sortIndicator(column.key) : '' }}
             </th>
@@ -94,27 +90,22 @@ function statusStyle(status) {
             <td class="px-4 py-3">{{ asset.name }}</td>
             <td class="px-4 py-3 whitespace-nowrap">{{ asset.category?.name || '—' }}</td>
             <td class="px-4 py-3 whitespace-nowrap">
-              <span
-                class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium"
-                :style="statusStyle(asset.status)"
-              >
-                {{ asset.status?.name || '—' }}
-              </span>
+              <StatusBadge :status="asset.status?.slug" :label="asset.status?.name" :color="asset.status?.colorCode" />
             </td>
             <td class="px-4 py-3">{{ asset.school?.name || '—' }}</td>
-            <td class="px-4 py-3 whitespace-nowrap">{{ formatCurrency(asset.purchaseCost) }}</td>
+            <td class="px-4 py-3 text-right whitespace-nowrap">{{ formatCurrency(asset.purchaseCost) }}</td>
             <td class="px-4 py-3 whitespace-nowrap">{{ formatDate(asset.purchaseDate) }}</td>
             <td class="px-4 py-3 text-right whitespace-nowrap">
               <RouterLink
                 :to="{ name: 'asset-detail', params: { id: asset.id } }"
-                class="text-navy-800 hover:underline"
+                class="link-action"
               >
                 View
               </RouterLink>
               <RouterLink
                 v-if="canEdit"
                 :to="{ name: 'asset-edit', params: { id: asset.id } }"
-                class="ml-3 text-navy-800 hover:underline"
+                class="link-action ml-3"
               >
                 Edit
               </RouterLink>
@@ -129,7 +120,7 @@ function statusStyle(status) {
       <div class="flex items-center gap-2">
         <button
           type="button"
-          class="rounded-md border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          class="btn btn-secondary btn-sm"
           :disabled="loading || (meta.page || 1) <= 1"
           @click="emit('page', (meta.page || 1) - 1)"
         >
@@ -138,7 +129,7 @@ function statusStyle(status) {
         <span>Page {{ meta.page || 1 }} of {{ meta.totalPages || 1 }}</span>
         <button
           type="button"
-          class="rounded-md border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          class="btn btn-secondary btn-sm"
           :disabled="loading || (meta.page || 1) >= (meta.totalPages || 1)"
           @click="emit('page', (meta.page || 1) + 1)"
         >

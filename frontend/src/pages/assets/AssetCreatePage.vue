@@ -89,17 +89,17 @@ onMounted(loadLookups);
 <template>
   <div>
     <div class="mb-4">
-      <button type="button" class="text-sm text-navy-800 hover:underline" @click="onCancel">← Back to assets</button>
+      <button type="button" class="link-back" @click="onCancel">← Back to assets</button>
     </div>
 
     <Alert v-if="error" class="mb-4" :message="error" />
 
-    <p v-if="loading" class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
+    <p v-if="loading" class="empty-panel">
       Loading form…
     </p>
     <p
       v-else-if="!categories.length || !statuses.length || !schools.length"
-      class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm"
+      class="empty-panel"
     >
       Required lookup data is missing, so a new asset cannot be created yet.
     </p>

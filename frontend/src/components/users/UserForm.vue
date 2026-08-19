@@ -199,33 +199,35 @@ function onSubmit() {
       <h2 class="text-lg font-semibold text-navy-950">Account</h2>
       <div class="mt-4 grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <label for="user-full-name" class="mb-1 block text-sm font-medium text-slate-700">Full name</label>
+          <label for="user-full-name" class="field-label field-required">Full name</label>
           <input
             id="user-full-name"
             v-model="form.fullName"
             type="text"
             maxlength="200"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('fullName') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('fullName') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('fullName'))"
           />
-          <p v-if="fieldError('fullName')" class="mt-1 text-xs text-red-700">{{ fieldError('fullName') }}</p>
+          <p v-if="fieldError('fullName')" class="field-error">{{ fieldError('fullName') }}</p>
         </div>
 
         <div>
-          <label for="user-email" class="mb-1 block text-sm font-medium text-slate-700">Email</label>
+          <label for="user-email" class="field-label field-required">Email</label>
           <input
             id="user-email"
             v-model="form.email"
             type="email"
             maxlength="200"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('email') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('email') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('email'))"
           />
-          <p v-if="fieldError('email')" class="mt-1 text-xs text-red-700">{{ fieldError('email') }}</p>
+          <p v-if="fieldError('email')" class="field-error">{{ fieldError('email') }}</p>
         </div>
 
         <div>
-          <label for="user-password" class="mb-1 block text-sm font-medium text-slate-700">
+          <label for="user-password" :class="['field-label', isEdit ? '' : 'field-required']">
             {{ isEdit ? 'Password (optional)' : 'Password' }}
           </label>
           <input
@@ -233,11 +235,12 @@ function onSubmit() {
             v-model="form.password"
             type="password"
             autocomplete="new-password"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('password') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('password') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('password'))"
           />
-          <p v-if="fieldError('password')" class="mt-1 text-xs text-red-700">{{ fieldError('password') }}</p>
-          <p v-else class="mt-1 text-xs text-slate-500">
+          <p v-if="fieldError('password')" class="field-error">{{ fieldError('password') }}</p>
+          <p v-else class="field-hint">
             {{ isEdit ? 'Leave blank to keep the current password. Minimum 8 characters if changing.' : 'Minimum 8 characters.' }}
           </p>
         </div>
@@ -249,39 +252,41 @@ function onSubmit() {
       <p class="mt-1 text-sm text-slate-600">{{ assignmentHint }}</p>
       <div class="mt-4 grid gap-4 md:grid-cols-2">
         <div>
-          <label for="user-role" class="mb-1 block text-sm font-medium text-slate-700">Role</label>
+          <label for="user-role" class="field-label field-required">Role</label>
           <select
             id="user-role"
             v-model="form.role"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('role') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('role') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('role'))"
           >
             <option v-for="item in ROLES" :key="item.value" :value="item.value">{{ item.label }}</option>
           </select>
-          <p v-if="fieldError('role')" class="mt-1 text-xs text-red-700">{{ fieldError('role') }}</p>
+          <p v-if="fieldError('role')" class="field-error">{{ fieldError('role') }}</p>
         </div>
 
         <div v-if="isEdit">
-          <label for="user-active" class="mb-1 block text-sm font-medium text-slate-700">Active status</label>
+          <label for="user-active" class="field-label">Active status</label>
           <select
             id="user-active"
             v-model="form.isActive"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('isActive') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('isActive') ? 'field-invalid' : ''"
           >
             <option :value="true">Active</option>
             <option :value="false">Inactive</option>
           </select>
-          <p v-if="fieldError('isActive')" class="mt-1 text-xs text-red-700">{{ fieldError('isActive') }}</p>
+          <p v-if="fieldError('isActive')" class="field-error">{{ fieldError('isActive') }}</p>
         </div>
 
         <div v-if="showMunicipality">
-          <label for="user-municipality" class="mb-1 block text-sm font-medium text-slate-700">Municipality</label>
+          <label for="user-municipality" :class="['field-label', form.role === 'municipal_officer' ? 'field-required' : '']">Municipality</label>
           <select
             id="user-municipality"
             v-model="form.municipalityId"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('municipalityId') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('municipalityId') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('municipalityId'))"
             :disabled="form.role === 'school_admin' && Boolean(form.schoolId)"
           >
             <option value="">Select municipality</option>
@@ -289,23 +294,24 @@ function onSubmit() {
               {{ municipality.name }}
             </option>
           </select>
-          <p v-if="fieldError('municipalityId')" class="mt-1 text-xs text-red-700">{{ fieldError('municipalityId') }}</p>
+          <p v-if="fieldError('municipalityId')" class="field-error">{{ fieldError('municipalityId') }}</p>
         </div>
 
         <div v-if="showSchool">
-          <label for="user-school" class="mb-1 block text-sm font-medium text-slate-700">School</label>
+          <label for="user-school" class="field-label field-required">School</label>
           <select
             id="user-school"
             v-model="form.schoolId"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('schoolId') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('schoolId') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('schoolId'))"
           >
             <option value="">Select school</option>
             <option v-for="school in filteredSchools" :key="school.id" :value="school.id">
               {{ school.name }}
             </option>
           </select>
-          <p v-if="fieldError('schoolId')" class="mt-1 text-xs text-red-700">{{ fieldError('schoolId') }}</p>
+          <p v-if="fieldError('schoolId')" class="field-error">{{ fieldError('schoolId') }}</p>
         </div>
       </div>
     </section>
@@ -313,14 +319,14 @@ function onSubmit() {
     <div class="flex flex-wrap gap-3">
       <button
         type="submit"
-        class="rounded-md bg-navy-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
+        class="btn btn-primary"
         :disabled="submitting"
       >
         {{ submitting ? 'Saving…' : submitLabel }}
       </button>
       <button
         type="button"
-        class="rounded-md border border-slate-200 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+        class="btn btn-secondary"
         :disabled="submitting"
         @click="emit('cancel')"
       >

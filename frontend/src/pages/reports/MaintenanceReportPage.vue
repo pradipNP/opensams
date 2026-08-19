@@ -121,7 +121,7 @@ onMounted(async () => {
 <template>
   <div>
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <RouterLink :to="{ name: 'reports' }" class="text-sm text-navy-800 hover:underline">← Back to reports</RouterLink>
+      <RouterLink :to="{ name: 'reports' }" class="link-back">← Back to reports</RouterLink>
       <ExportButtons :exporting="exporting" @export="onExport" />
     </div>
 

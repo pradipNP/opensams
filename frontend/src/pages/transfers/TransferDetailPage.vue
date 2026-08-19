@@ -2,6 +2,7 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import StatusBadge from '@/components/ui/StatusBadge.vue';
 import TransferTimeline from '@/components/transfers/TransferTimeline.vue';
 import TransferActionDialog from '@/components/transfers/TransferActionDialog.vue';
 import {
@@ -11,7 +12,7 @@ import {
   getTransfer,
   rejectTransfer,
 } from '@/api/transfer.api';
-import { displayValue, errorMessage, formatAction, formatDateTime } from '@/utils/format';
+import { displayValue, errorMessage, formatDateTime } from '@/utils/format';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAppStore } from '@/stores/app.store';
 
@@ -40,19 +41,6 @@ const canCompleteNow = computed(() => canApprove.value && transfer.value?.status
 const canCancelNow = computed(
   () => canCancel.value && ['draft', 'pending'].includes(transfer.value?.status)
 );
-
-function statusClass(status) {
-  if (status === 'completed') {
-    return 'border-emerald-200 bg-emerald-50 text-emerald-800';
-  }
-  if (status === 'rejected' || status === 'cancelled') {
-    return 'border-red-200 bg-red-50 text-red-800';
-  }
-  if (status === 'approved') {
-    return 'border-sky-200 bg-sky-50 text-sky-800';
-  }
-  return 'border-amber-200 bg-amber-50 text-amber-800';
-}
 
 async function loadTransfer(id) {
   loading.value = true;
@@ -140,14 +128,14 @@ watch(
 <template>
   <div>
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <RouterLink :to="{ name: 'transfers' }" class="text-sm text-navy-800 hover:underline">
+      <RouterLink :to="{ name: 'transfers' }" class="link-back">
         ← Back to transfers
       </RouterLink>
       <div v-if="transfer" class="flex flex-wrap gap-2">
         <button
           v-if="canApproveNow"
           type="button"
-          class="rounded-md bg-navy-900 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800"
+          class="btn btn-success"
           @click="openDialog('approve')"
         >
           Approve
@@ -155,7 +143,7 @@ watch(
         <button
           v-if="canRejectNow"
           type="button"
-          class="rounded-md border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+          class="btn btn-danger-outline"
           @click="openDialog('reject')"
         >
           Reject
@@ -163,7 +151,7 @@ watch(
         <button
           v-if="canCompleteNow"
           type="button"
-          class="rounded-md border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+          class="btn btn-primary"
           @click="openDialog('complete')"
         >
           Complete
@@ -171,7 +159,7 @@ watch(
         <button
           v-if="canCancelNow"
           type="button"
-          class="rounded-md border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+          class="btn btn-danger-outline"
           @click="openDialog('cancel')"
         >
           Cancel
@@ -182,12 +170,12 @@ watch(
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
     <Alert v-if="error" class="mb-4" :message="error" />
 
-    <p v-if="loading" class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
+    <p v-if="loading" class="empty-panel">
       Loading transfer…
     </p>
     <p
       v-else-if="!error && !transfer"
-      class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm"
+      class="empty-panel"
     >
       Transfer not found.
     </p>
@@ -206,7 +194,7 @@ watch(
               <RouterLink
                 v-if="transfer.asset?.id"
                 :to="{ name: 'asset-detail', params: { id: transfer.asset.id } }"
-                class="text-navy-800 hover:underline"
+                class="link-action"
               >
                 {{ transfer.asset.assetTag }} — {{ transfer.asset.name }}
               </RouterLink>
@@ -216,12 +204,7 @@ watch(
           <div>
             <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Status</dt>
             <dd class="mt-1">
-              <span
-                class="inline-flex rounded-full border px-2 py-0.5 text-xs font-medium"
-                :class="statusClass(transfer.status)"
-              >
-                {{ formatAction(transfer.status) }}
-              </span>
+              <StatusBadge :status="transfer.status" />
             </dd>
           </div>
           <div>

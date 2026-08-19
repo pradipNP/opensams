@@ -125,7 +125,7 @@ onMounted(loadAssets);
       <h2 class="text-lg font-semibold text-navy-950">Request details</h2>
       <div class="mt-4 grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <label for="maintenance-asset-search" class="mb-1 block text-sm font-medium text-slate-700">
+          <label for="maintenance-asset-search" class="field-label">
             Search assets
           </label>
           <input
@@ -133,60 +133,62 @@ onMounted(loadAssets);
             v-model="assetQuery"
             type="search"
             placeholder="Search by tag or name"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+            class="field-control"
           />
-          <p v-if="assetsLoading" class="mt-1 text-xs text-slate-500">Searching assets…</p>
-          <p v-else-if="assetsError" class="mt-1 text-xs text-red-700">{{ assetsError }}</p>
+          <p v-if="assetsLoading" class="field-hint">Searching assets…</p>
+          <p v-else-if="assetsError" class="field-error">{{ assetsError }}</p>
         </div>
 
         <div class="md:col-span-2">
-          <label for="maintenance-asset" class="mb-1 block text-sm font-medium text-slate-700">Asset</label>
+          <label for="maintenance-asset" class="field-label field-required">Asset</label>
           <select
             id="maintenance-asset"
             v-model="form.assetId"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('assetId') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('assetId') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('assetId'))"
           >
             <option value="">Select asset</option>
             <option v-for="asset in assets" :key="asset.id" :value="asset.id">
               {{ asset.assetTag }} — {{ asset.name }}
             </option>
           </select>
-          <p v-if="fieldError('assetId')" class="mt-1 text-xs text-red-700">{{ fieldError('assetId') }}</p>
-          <p v-else-if="!assetsLoading && !assets.length" class="mt-1 text-xs text-slate-500">
+          <p v-if="fieldError('assetId')" class="field-error">{{ fieldError('assetId') }}</p>
+          <p v-else-if="!assetsLoading && !assets.length" class="field-hint">
             No assets found in your scope.
           </p>
         </div>
 
         <div>
-          <label for="maintenance-priority" class="mb-1 block text-sm font-medium text-slate-700">Priority</label>
+          <label for="maintenance-priority" class="field-label field-required">Priority</label>
           <select
             id="maintenance-priority"
             v-model="form.priority"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('priority') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('priority') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('priority'))"
           >
             <option v-for="item in priorities" :key="item.value" :value="item.value">{{ item.label }}</option>
           </select>
-          <p v-if="fieldError('priority')" class="mt-1 text-xs text-red-700">{{ fieldError('priority') }}</p>
+          <p v-if="fieldError('priority')" class="field-error">{{ fieldError('priority') }}</p>
         </div>
 
         <div>
-          <label for="maintenance-cost" class="mb-1 block text-sm font-medium text-slate-700">Estimated cost</label>
+          <label for="maintenance-cost" class="field-label">Estimated cost</label>
           <input
             id="maintenance-cost"
             v-model="form.estimatedCost"
             type="number"
             min="0"
             step="0.01"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('estimatedCost') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('estimatedCost') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('estimatedCost')" class="mt-1 text-xs text-red-700">{{ fieldError('estimatedCost') }}</p>
+          <p v-if="fieldError('estimatedCost')" class="field-error">{{ fieldError('estimatedCost') }}</p>
         </div>
 
         <div class="md:col-span-2">
-          <label for="maintenance-description" class="mb-1 block text-sm font-medium text-slate-700">
+          <label for="maintenance-description" class="field-label field-required">
             Problem description
           </label>
           <textarea
@@ -194,22 +196,23 @@ onMounted(loadAssets);
             v-model="form.description"
             rows="4"
             maxlength="4000"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('description') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('description') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('description'))"
           />
-          <p v-if="fieldError('description')" class="mt-1 text-xs text-red-700">{{ fieldError('description') }}</p>
+          <p v-if="fieldError('description')" class="field-error">{{ fieldError('description') }}</p>
         </div>
 
         <div class="md:col-span-2">
-          <label for="maintenance-notes" class="mb-1 block text-sm font-medium text-slate-700">Notes</label>
+          <label for="maintenance-notes" class="field-label">Notes</label>
           <textarea
             id="maintenance-notes"
             v-model="form.notes"
             rows="3"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('notes') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('notes') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('notes')" class="mt-1 text-xs text-red-700">{{ fieldError('notes') }}</p>
+          <p v-if="fieldError('notes')" class="field-error">{{ fieldError('notes') }}</p>
         </div>
       </div>
     </section>
@@ -217,14 +220,14 @@ onMounted(loadAssets);
     <div class="flex flex-wrap gap-3">
       <button
         type="submit"
-        class="rounded-md bg-navy-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
+        class="btn btn-primary"
         :disabled="submitting"
       >
         {{ submitting ? 'Submitting…' : 'Create request' }}
       </button>
       <button
         type="button"
-        class="rounded-md border border-slate-200 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+        class="btn btn-secondary"
         :disabled="submitting"
         @click="emit('cancel')"
       >

@@ -11,7 +11,7 @@ const emit = defineEmits(['export']);
   <div class="flex flex-wrap gap-2">
     <button
       type="button"
-      class="rounded-md bg-navy-900 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
+      class="btn btn-primary"
       :disabled="disabled || Boolean(exporting)"
       @click="emit('export', 'xlsx')"
     >
@@ -19,7 +19,7 @@ const emit = defineEmits(['export']);
     </button>
     <button
       type="button"
-      class="rounded-md border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+      class="btn btn-secondary"
       :disabled="disabled || Boolean(exporting)"
       @click="emit('export', 'pdf')"
     >

@@ -54,7 +54,7 @@ function onSort(column) {
 </script>
 
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+  <section class="table-shell">
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-slate-200 text-sm">
         <thead class="bg-slate-50 text-left text-xs font-semibold tracking-wide text-slate-600 uppercase">
@@ -63,8 +63,15 @@ function onSort(column) {
               v-for="column in columns"
               :key="column.key"
               class="px-4 py-3 whitespace-nowrap"
-              :class="column.sortable ? 'cursor-pointer select-none hover:text-navy-950' : ''"
+              :class="[
+                column.sortable ? 'cursor-pointer select-none hover:text-navy-950' : '',
+                column.align === 'right' || column.numeric ? 'text-right' : '',
+              ]"
+              :tabindex="column.sortable ? 0 : undefined"
+              :aria-sort="sort === (column.sortKey || column.key) ? (order === 'asc' ? 'ascending' : 'descending') : undefined"
               @click="onSort(column)"
+              @keydown.enter.prevent="onSort(column)"
+              @keydown.space.prevent="onSort(column)"
             >
               {{ column.label }}{{ sortIndicator(column) }}
             </th>
@@ -78,7 +85,12 @@ function onSort(column) {
             <td :colspan="columns.length || 1" class="px-4 py-10 text-center text-slate-500">{{ emptyMessage }}</td>
           </tr>
           <tr v-for="(row, index) in rows" :key="row.id || index" class="hover:bg-slate-50">
-            <td v-for="column in columns" :key="column.key" class="px-4 py-3">
+            <td
+              v-for="column in columns"
+              :key="column.key"
+              class="px-4 py-3"
+              :class="column.align === 'right' || column.numeric ? 'text-right tabular-nums whitespace-nowrap' : ''"
+            >
               {{ cellValue(row, column) }}
             </td>
           </tr>
@@ -94,7 +106,7 @@ function onSort(column) {
       <div class="flex items-center gap-2">
         <button
           type="button"
-          class="rounded-md border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          class="btn btn-secondary btn-sm"
           :disabled="loading || (meta.page || 1) <= 1"
           @click="emit('page', (meta.page || 1) - 1)"
         >
@@ -103,7 +115,7 @@ function onSort(column) {
         <span>Page {{ meta.page || 1 }} of {{ meta.totalPages || 1 }}</span>
         <button
           type="button"
-          class="rounded-md border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          class="btn btn-secondary btn-sm"
           :disabled="loading || (meta.page || 1) >= (meta.totalPages || 1)"
           @click="emit('page', (meta.page || 1) + 1)"
         >

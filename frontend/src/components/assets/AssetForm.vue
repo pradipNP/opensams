@@ -157,57 +157,61 @@ defineExpose({ applyAsset, setSchoolId: (id) => { form.schoolId = id; } });
       <h2 class="text-lg font-semibold text-navy-950">Basic information</h2>
       <div class="mt-4 grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <label for="asset-name" class="mb-1 block text-sm font-medium text-slate-700">Asset name</label>
+          <label for="asset-name" class="field-label field-required">Asset name</label>
           <input
             id="asset-name"
             v-model="form.name"
             type="text"
             maxlength="300"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('name') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('name') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('name'))"
           />
-          <p v-if="fieldError('name')" class="mt-1 text-xs text-red-700">{{ fieldError('name') }}</p>
+          <p v-if="fieldError('name')" class="field-error">{{ fieldError('name') }}</p>
         </div>
 
         <div>
-          <label for="asset-category" class="mb-1 block text-sm font-medium text-slate-700">Category</label>
+          <label for="asset-category" class="field-label field-required">Category</label>
           <select
             id="asset-category"
             v-model="form.categoryId"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('categoryId') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('categoryId') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('categoryId'))"
           >
             <option value="">Select category</option>
             <option v-for="category in categories" :key="category.id" :value="category.id">
               {{ category.name }}
             </option>
           </select>
-          <p v-if="fieldError('categoryId')" class="mt-1 text-xs text-red-700">{{ fieldError('categoryId') }}</p>
+          <p v-if="fieldError('categoryId')" class="field-error">{{ fieldError('categoryId') }}</p>
         </div>
 
         <div>
-          <label for="asset-status" class="mb-1 block text-sm font-medium text-slate-700">Status</label>
+          <label for="asset-status" class="field-label field-required">Status</label>
           <select
             id="asset-status"
             v-model="form.statusId"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('statusId') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('statusId') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('statusId'))"
           >
             <option value="">Select status</option>
             <option v-for="status in statuses" :key="status.id" :value="status.id">
               {{ status.name }}
             </option>
           </select>
-          <p v-if="fieldError('statusId')" class="mt-1 text-xs text-red-700">{{ fieldError('statusId') }}</p>
+          <p v-if="fieldError('statusId')" class="field-error">{{ fieldError('statusId') }}</p>
         </div>
 
         <div>
-          <label for="asset-school" class="mb-1 block text-sm font-medium text-slate-700">School</label>
+          <label for="asset-school" class="field-label field-required">School</label>
           <select
             id="asset-school"
             v-model="form.schoolId"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700 disabled:bg-slate-50"
-            :class="fieldError('schoolId') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('schoolId') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('schoolId'))"
             :disabled="lockSchool"
           >
             <option value="">Select school</option>
@@ -215,32 +219,32 @@ defineExpose({ applyAsset, setSchoolId: (id) => { form.schoolId = id; } });
               {{ school.name }}
             </option>
           </select>
-          <p v-if="fieldError('schoolId')" class="mt-1 text-xs text-red-700">{{ fieldError('schoolId') }}</p>
+          <p v-if="fieldError('schoolId')" class="field-error">{{ fieldError('schoolId') }}</p>
         </div>
 
         <div>
-          <label for="asset-department" class="mb-1 block text-sm font-medium text-slate-700">Department</label>
+          <label for="asset-department" class="field-label">Department</label>
           <input
             id="asset-department"
             v-model="form.department"
             type="text"
             maxlength="100"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('department') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('department') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('department')" class="mt-1 text-xs text-red-700">{{ fieldError('department') }}</p>
+          <p v-if="fieldError('department')" class="field-error">{{ fieldError('department') }}</p>
         </div>
 
         <div class="md:col-span-2">
-          <label for="asset-notes" class="mb-1 block text-sm font-medium text-slate-700">Description</label>
+          <label for="asset-notes" class="field-label">Description</label>
           <textarea
             id="asset-notes"
             v-model="form.notes"
             rows="3"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('notes') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('notes') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('notes')" class="mt-1 text-xs text-red-700">{{ fieldError('notes') }}</p>
+          <p v-if="fieldError('notes')" class="field-error">{{ fieldError('notes') }}</p>
         </div>
       </div>
     </section>
@@ -249,67 +253,67 @@ defineExpose({ applyAsset, setSchoolId: (id) => { form.schoolId = id; } });
       <h2 class="text-lg font-semibold text-navy-950">Location and purchase</h2>
       <div class="mt-4 grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <label for="asset-location" class="mb-1 block text-sm font-medium text-slate-700">Location</label>
+          <label for="asset-location" class="field-label">Location</label>
           <input
             id="asset-location"
             v-model="form.location"
             type="text"
             maxlength="200"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('location') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('location') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('location')" class="mt-1 text-xs text-red-700">{{ fieldError('location') }}</p>
+          <p v-if="fieldError('location')" class="field-error">{{ fieldError('location') }}</p>
         </div>
 
         <div>
-          <label for="asset-cost" class="mb-1 block text-sm font-medium text-slate-700">Purchase cost</label>
+          <label for="asset-cost" class="field-label">Purchase cost</label>
           <input
             id="asset-cost"
             v-model="form.purchaseCost"
             type="number"
             min="0"
             step="0.01"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('purchaseCost') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('purchaseCost') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('purchaseCost')" class="mt-1 text-xs text-red-700">{{ fieldError('purchaseCost') }}</p>
+          <p v-if="fieldError('purchaseCost')" class="field-error">{{ fieldError('purchaseCost') }}</p>
         </div>
 
         <div>
-          <label for="asset-purchase-date" class="mb-1 block text-sm font-medium text-slate-700">Purchase date</label>
+          <label for="asset-purchase-date" class="field-label">Purchase date</label>
           <input
             id="asset-purchase-date"
             v-model="form.purchaseDate"
             type="date"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('purchaseDate') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('purchaseDate') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('purchaseDate')" class="mt-1 text-xs text-red-700">{{ fieldError('purchaseDate') }}</p>
+          <p v-if="fieldError('purchaseDate')" class="field-error">{{ fieldError('purchaseDate') }}</p>
         </div>
 
         <div>
-          <label for="asset-warranty" class="mb-1 block text-sm font-medium text-slate-700">Warranty expiry</label>
+          <label for="asset-warranty" class="field-label">Warranty expiry</label>
           <input
             id="asset-warranty"
             v-model="form.warrantyExpiry"
             type="date"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('warrantyExpiry') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('warrantyExpiry') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('warrantyExpiry')" class="mt-1 text-xs text-red-700">{{ fieldError('warrantyExpiry') }}</p>
+          <p v-if="fieldError('warrantyExpiry')" class="field-error">{{ fieldError('warrantyExpiry') }}</p>
         </div>
 
         <div>
-          <label for="asset-vendor" class="mb-1 block text-sm font-medium text-slate-700">Vendor</label>
+          <label for="asset-vendor" class="field-label">Vendor</label>
           <input
             id="asset-vendor"
             v-model="form.vendor"
             type="text"
             maxlength="200"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('vendor') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('vendor') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('vendor')" class="mt-1 text-xs text-red-700">{{ fieldError('vendor') }}</p>
+          <p v-if="fieldError('vendor')" class="field-error">{{ fieldError('vendor') }}</p>
         </div>
       </div>
     </section>
@@ -317,14 +321,14 @@ defineExpose({ applyAsset, setSchoolId: (id) => { form.schoolId = id; } });
     <div class="flex flex-wrap gap-3">
       <button
         type="submit"
-        class="rounded-md bg-navy-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
+        class="btn btn-primary"
         :disabled="submitting"
       >
         {{ submitting ? 'Saving…' : submitLabel }}
       </button>
       <button
         type="button"
-        class="rounded-md border border-slate-200 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+        class="btn btn-secondary"
         :disabled="submitting"
         @click="emit('cancel')"
       >

@@ -142,83 +142,86 @@ onMounted(async () => {
       <h2 class="text-lg font-semibold text-navy-950">Transfer details</h2>
       <div class="mt-4 grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <label for="transfer-asset-search" class="mb-1 block text-sm font-medium text-slate-700">Search assets</label>
+          <label for="transfer-asset-search" class="field-label">Search assets</label>
           <input
             id="transfer-asset-search"
             v-model="assetQuery"
             type="search"
             placeholder="Search by tag or name"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+            class="field-control"
           />
-          <p v-if="assetsLoading" class="mt-1 text-xs text-slate-500">Searching assets…</p>
-          <p v-else-if="assetsError" class="mt-1 text-xs text-red-700">{{ assetsError }}</p>
+          <p v-if="assetsLoading" class="field-hint">Searching assets…</p>
+          <p v-else-if="assetsError" class="field-error">{{ assetsError }}</p>
         </div>
 
         <div class="md:col-span-2">
-          <label for="transfer-asset" class="mb-1 block text-sm font-medium text-slate-700">Asset</label>
+          <label for="transfer-asset" class="field-label field-required">Asset</label>
           <select
             id="transfer-asset"
             v-model="form.assetId"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('assetId') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('assetId') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('assetId'))"
           >
             <option value="">Select asset</option>
             <option v-for="asset in assets" :key="asset.id" :value="asset.id">
               {{ asset.assetTag }} — {{ asset.name }} ({{ asset.school?.name || 'Unknown school' }})
             </option>
           </select>
-          <p v-if="fieldError('assetId')" class="mt-1 text-xs text-red-700">{{ fieldError('assetId') }}</p>
-          <p v-else-if="!assetsLoading && !assets.length" class="mt-1 text-xs text-slate-500">
+          <p v-if="fieldError('assetId')" class="field-error">{{ fieldError('assetId') }}</p>
+          <p v-else-if="!assetsLoading && !assets.length" class="field-hint">
             No assets found in your scope.
           </p>
         </div>
 
         <div class="md:col-span-2">
-          <label for="transfer-destination" class="mb-1 block text-sm font-medium text-slate-700">
+          <label for="transfer-destination" class="field-label field-required">
             Destination school
           </label>
           <select
             id="transfer-destination"
             v-model="form.toSchoolId"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('toSchoolId') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('toSchoolId') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('toSchoolId'))"
           >
             <option value="">Select destination school</option>
             <option v-for="school in destinationSchools" :key="school.id" :value="school.id">
               {{ school.name }}{{ school.municipalityName ? ` (${school.municipalityName})` : '' }}
             </option>
           </select>
-          <p v-if="fieldError('toSchoolId')" class="mt-1 text-xs text-red-700">{{ fieldError('toSchoolId') }}</p>
-          <p v-else-if="schoolsLoading" class="mt-1 text-xs text-slate-500">Loading schools…</p>
-          <p v-else-if="schoolsError" class="mt-1 text-xs text-red-700">{{ schoolsError }}</p>
-          <p v-else-if="form.assetId && !destinationSchools.length" class="mt-1 text-xs text-slate-500">
+          <p v-if="fieldError('toSchoolId')" class="field-error">{{ fieldError('toSchoolId') }}</p>
+          <p v-else-if="schoolsLoading" class="field-hint">Loading schools…</p>
+          <p v-else-if="schoolsError" class="field-error">{{ schoolsError }}</p>
+          <p v-else-if="form.assetId && !destinationSchools.length" class="field-hint">
             No destination schools are available in the current API scope.
           </p>
         </div>
 
         <div class="md:col-span-2">
-          <label for="transfer-reason" class="mb-1 block text-sm font-medium text-slate-700">Transfer reason</label>
+          <label for="transfer-reason" class="field-label field-required">Transfer reason</label>
           <textarea
             id="transfer-reason"
             v-model="form.reason"
             rows="4"
             maxlength="4000"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('reason') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('reason') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('reason'))"
           />
-          <p v-if="fieldError('reason')" class="mt-1 text-xs text-red-700">{{ fieldError('reason') }}</p>
+          <p v-if="fieldError('reason')" class="field-error">{{ fieldError('reason') }}</p>
         </div>
 
         <div class="md:col-span-2">
-          <label for="transfer-notes" class="mb-1 block text-sm font-medium text-slate-700">Notes</label>
+          <label for="transfer-notes" class="field-label">Notes</label>
           <textarea
             id="transfer-notes"
             v-model="form.notes"
             rows="3"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('notes') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('notes') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('notes')" class="mt-1 text-xs text-red-700">{{ fieldError('notes') }}</p>
+          <p v-if="fieldError('notes')" class="field-error">{{ fieldError('notes') }}</p>
         </div>
       </div>
     </section>
@@ -226,14 +229,14 @@ onMounted(async () => {
     <div class="flex flex-wrap gap-3">
       <button
         type="submit"
-        class="rounded-md bg-navy-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
+        class="btn btn-primary"
         :disabled="submitting"
       >
         {{ submitting ? 'Submitting…' : 'Create transfer' }}
       </button>
       <button
         type="button"
-        class="rounded-md border border-slate-200 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+        class="btn btn-secondary"
         :disabled="submitting"
         @click="emit('cancel')"
       >

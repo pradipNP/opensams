@@ -69,17 +69,17 @@ watch(
 <template>
   <div>
     <div class="mb-4">
-      <button type="button" class="text-sm text-navy-800 hover:underline" @click="onCancel">← Back to school</button>
+      <button type="button" class="link-back" @click="onCancel">← Back to school</button>
     </div>
 
     <Alert v-if="error" class="mb-4" :message="error" />
 
-    <p v-if="loading" class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
+    <p v-if="loading" class="empty-panel">
       Loading school…
     </p>
     <p
       v-else-if="!school"
-      class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm"
+      class="empty-panel"
     >
       School not found.
     </p>

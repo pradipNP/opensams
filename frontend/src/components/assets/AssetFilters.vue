@@ -63,22 +63,22 @@ function onClear() {
   <section class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
     <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
       <div class="md:col-span-2">
-        <label for="asset-search" class="mb-1 block text-sm font-medium text-slate-700">Search</label>
+        <label for="asset-search" class="field-label">Search</label>
         <input
           id="asset-search"
           v-model="searchDraft"
           type="search"
           placeholder="Tag, name, or vendor"
-          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+          class="field-control"
         />
       </div>
 
       <div>
-        <label for="asset-category" class="mb-1 block text-sm font-medium text-slate-700">Category</label>
+        <label for="asset-category" class="field-label">Category</label>
         <select
           id="asset-category"
           :value="categoryId"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+          class="field-control"
           @change="onSelect('categoryId', $event)"
         >
           <option value="">All categories</option>
@@ -89,11 +89,11 @@ function onClear() {
       </div>
 
       <div>
-        <label for="asset-status" class="mb-1 block text-sm font-medium text-slate-700">Status</label>
+        <label for="asset-status" class="field-label">Status</label>
         <select
           id="asset-status"
           :value="statusId"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+          class="field-control"
           @change="onSelect('statusId', $event)"
         >
           <option value="">All statuses</option>
@@ -104,11 +104,11 @@ function onClear() {
       </div>
 
       <div v-if="showMunicipality">
-        <label for="asset-municipality" class="mb-1 block text-sm font-medium text-slate-700">Municipality</label>
+        <label for="asset-municipality" class="field-label">Municipality</label>
         <select
           id="asset-municipality"
           :value="municipalityId"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+          class="field-control"
           @change="onSelect('municipalityId', $event)"
         >
           <option value="">All municipalities</option>
@@ -119,11 +119,11 @@ function onClear() {
       </div>
 
       <div v-if="showSchool">
-        <label for="asset-school" class="mb-1 block text-sm font-medium text-slate-700">School</label>
+        <label for="asset-school" class="field-label">School</label>
         <select
           id="asset-school"
           :value="schoolId"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+          class="field-control"
           @change="onSelect('schoolId', $event)"
         >
           <option value="">All schools</option>
@@ -137,7 +137,7 @@ function onClear() {
     <div class="mt-3 flex justify-end">
       <button
         type="button"
-        class="rounded-md border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+        class="btn btn-secondary btn-sm"
         @click="onClear"
       >
         Clear filters

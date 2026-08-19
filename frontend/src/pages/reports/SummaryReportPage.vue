@@ -49,19 +49,19 @@ onMounted(loadReport);
 <template>
   <div>
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <RouterLink :to="{ name: 'reports' }" class="text-sm text-navy-800 hover:underline">← Back to reports</RouterLink>
+      <RouterLink :to="{ name: 'reports' }" class="link-back">← Back to reports</RouterLink>
       <ExportButtons :exporting="exporting" @export="onExport" />
     </div>
 
     <Alert v-if="exportError" class="mb-4" :message="exportError" />
     <Alert v-if="error" class="mb-4" :message="error" />
 
-    <p v-if="loading" class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
+    <p v-if="loading" class="empty-panel">
       Loading summary report…
     </p>
     <p
       v-else-if="!error && !summary"
-      class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm"
+      class="empty-panel"
     >
       No summary data is available in your scope.
     </p>

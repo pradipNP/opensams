@@ -7,7 +7,7 @@ const title = computed(() => route.meta.title || 'This module');
 </script>
 
 <template>
-  <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+  <section class="section-card p-6">
     <h2 class="text-lg font-semibold text-navy-950">{{ title }}</h2>
     <p class="mt-2 max-w-xl text-sm leading-6 text-slate-600">
       This screen will be implemented in a later frontend phase. The API for this module is already available.

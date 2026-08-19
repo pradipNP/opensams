@@ -60,34 +60,36 @@ async function onSubmit() {
       <Alert v-if="submitError" :message="submitError" />
 
       <div>
-        <label for="email" class="mb-1 block text-sm font-medium text-slate-700">Email</label>
+        <label for="email" class="field-label field-required">Email</label>
         <input
           id="email"
           v-model="form.email"
           type="email"
+          class="field-control"
+          :class="errors.email ? 'field-invalid' : ''"
+          :aria-invalid="Boolean(errors.email)"
           autocomplete="username"
-          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-          :class="errors.email ? 'border-red-400' : ''"
         />
-        <p v-if="errors.email" class="mt-1 text-xs text-red-700">{{ errors.email }}</p>
+        <p v-if="errors.email" class="field-error">{{ errors.email }}</p>
       </div>
 
       <div>
-        <label for="password" class="mb-1 block text-sm font-medium text-slate-700">Password</label>
+        <label for="password" class="field-label field-required">Password</label>
         <input
           id="password"
           v-model="form.password"
           type="password"
+          class="field-control"
+          :class="errors.password ? 'field-invalid' : ''"
+          :aria-invalid="Boolean(errors.password)"
           autocomplete="current-password"
-          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-          :class="errors.password ? 'border-red-400' : ''"
         />
-        <p v-if="errors.password" class="mt-1 text-xs text-red-700">{{ errors.password }}</p>
+        <p v-if="errors.password" class="field-error">{{ errors.password }}</p>
       </div>
 
       <button
         type="submit"
-        class="w-full rounded-md bg-navy-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
+        class="btn btn-primary w-full"
         :disabled="auth.loading"
       >
         {{ auth.loading ? 'Signing in…' : 'Sign in' }}

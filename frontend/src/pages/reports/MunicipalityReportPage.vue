@@ -18,9 +18,9 @@ const page = ref(1);
 
 const columns = [
   { key: 'name', label: 'Municipality' },
-  { key: 'schools', label: 'Schools', get: (row) => formatNumber(row.totalSchools) },
-  { key: 'assets', label: 'Assets', get: (row) => formatNumber(row.totalAssets) },
-  { key: 'value', label: 'Asset Value', get: (row) => formatCurrency(row.totalAssetValue) },
+  { key: 'schools', label: 'Schools', numeric: true, get: (row) => formatNumber(row.totalSchools) },
+  { key: 'assets', label: 'Assets', numeric: true, get: (row) => formatNumber(row.totalAssets) },
+  { key: 'value', label: 'Asset Value', numeric: true, get: (row) => formatCurrency(row.totalAssetValue) },
 ];
 
 async function loadReport() {
@@ -57,7 +57,7 @@ onMounted(loadReport);
 <template>
   <div>
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <RouterLink :to="{ name: 'reports' }" class="text-sm text-navy-800 hover:underline">← Back to reports</RouterLink>
+      <RouterLink :to="{ name: 'reports' }" class="link-back">← Back to reports</RouterLink>
       <ExportButtons :exporting="exporting" @export="onExport" />
     </div>
 

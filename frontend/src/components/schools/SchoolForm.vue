@@ -124,88 +124,92 @@ function onSubmit() {
       <h2 class="text-lg font-semibold text-navy-950">School details</h2>
       <div class="mt-4 grid gap-4 md:grid-cols-2">
         <div class="md:col-span-2">
-          <label for="school-name" class="mb-1 block text-sm font-medium text-slate-700">Name</label>
+          <label for="school-name" class="field-label field-required">Name</label>
           <input
             id="school-name"
             v-model="form.name"
             type="text"
             maxlength="300"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('name') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('name') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('name'))"
           />
-          <p v-if="fieldError('name')" class="mt-1 text-xs text-red-700">{{ fieldError('name') }}</p>
+          <p v-if="fieldError('name')" class="field-error">{{ fieldError('name') }}</p>
         </div>
 
         <div>
-          <label for="school-code" class="mb-1 block text-sm font-medium text-slate-700">School code</label>
+          <label for="school-code" class="field-label field-required">School code</label>
           <input
             id="school-code"
             v-model="form.schoolCode"
             type="text"
             maxlength="20"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('schoolCode') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('schoolCode') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('schoolCode'))"
           />
-          <p v-if="fieldError('schoolCode')" class="mt-1 text-xs text-red-700">{{ fieldError('schoolCode') }}</p>
+          <p v-if="fieldError('schoolCode')" class="field-error">{{ fieldError('schoolCode') }}</p>
         </div>
 
         <div>
-          <label for="school-type" class="mb-1 block text-sm font-medium text-slate-700">School type</label>
+          <label for="school-type" class="field-label field-required">School type</label>
           <input
             id="school-type"
             v-model="form.schoolType"
             type="text"
             maxlength="50"
             list="school-type-options"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('schoolType') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('schoolType') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('schoolType'))"
           />
           <datalist id="school-type-options">
             <option v-for="type in SCHOOL_TYPES" :key="type" :value="type" />
           </datalist>
-          <p v-if="fieldError('schoolType')" class="mt-1 text-xs text-red-700">{{ fieldError('schoolType') }}</p>
+          <p v-if="fieldError('schoolType')" class="field-error">{{ fieldError('schoolType') }}</p>
         </div>
 
         <div>
-          <label for="school-municipality" class="mb-1 block text-sm font-medium text-slate-700">Municipality</label>
+          <label for="school-municipality" class="field-label field-required">Municipality</label>
           <select
             id="school-municipality"
             v-model="form.municipalityId"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('municipalityId') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('municipalityId') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('municipalityId'))"
           >
             <option value="">Select municipality</option>
             <option v-for="municipality in municipalities" :key="municipality.id" :value="municipality.id">
               {{ municipality.name }}
             </option>
           </select>
-          <p v-if="fieldError('municipalityId')" class="mt-1 text-xs text-red-700">{{ fieldError('municipalityId') }}</p>
+          <p v-if="fieldError('municipalityId')" class="field-error">{{ fieldError('municipalityId') }}</p>
         </div>
 
         <div v-if="isEdit">
-          <label for="school-active" class="mb-1 block text-sm font-medium text-slate-700">Active status</label>
+          <label for="school-active" class="field-label">Active status</label>
           <select
             id="school-active"
             v-model="form.isActive"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('isActive') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('isActive') ? 'field-invalid' : ''"
           >
             <option :value="true">Active</option>
             <option :value="false">Inactive</option>
           </select>
-          <p v-if="fieldError('isActive')" class="mt-1 text-xs text-red-700">{{ fieldError('isActive') }}</p>
+          <p v-if="fieldError('isActive')" class="field-error">{{ fieldError('isActive') }}</p>
         </div>
 
         <div class="md:col-span-2">
-          <label for="school-address" class="mb-1 block text-sm font-medium text-slate-700">Address</label>
+          <label for="school-address" class="field-label">Address</label>
           <textarea
             id="school-address"
             v-model="form.address"
             rows="3"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('address') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('address') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('address')" class="mt-1 text-xs text-red-700">{{ fieldError('address') }}</p>
+          <p v-if="fieldError('address')" class="field-error">{{ fieldError('address') }}</p>
         </div>
       </div>
     </section>
@@ -213,14 +217,14 @@ function onSubmit() {
     <div class="flex flex-wrap gap-3">
       <button
         type="submit"
-        class="rounded-md bg-navy-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
+        class="btn btn-primary"
         :disabled="submitting"
       >
         {{ submitting ? 'Saving…' : submitLabel }}
       </button>
       <button
         type="button"
-        class="rounded-md border border-slate-200 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+        class="btn btn-secondary"
         :disabled="submitting"
         @click="emit('cancel')"
       >

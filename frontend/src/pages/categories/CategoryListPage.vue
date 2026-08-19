@@ -109,7 +109,7 @@ onMounted(async () => {
       <RouterLink
         v-if="canWrite"
         :to="{ name: 'category-create' }"
-        class="rounded-md bg-navy-900 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800"
+        class="btn btn-primary"
       >
         Create category
       </RouterLink>
@@ -121,21 +121,21 @@ onMounted(async () => {
     <section class="mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
       <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <div class="md:col-span-2">
-          <label for="category-search" class="mb-1 block text-sm font-medium text-slate-700">Search</label>
+          <label for="category-search" class="field-label">Search</label>
           <input
             id="category-search"
             v-model="searchDraft"
             type="search"
             placeholder="Name or description"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+            class="field-control"
           />
         </div>
         <div>
-          <label for="category-department" class="mb-1 block text-sm font-medium text-slate-700">Department</label>
+          <label for="category-department" class="field-label">Department</label>
           <select
             id="category-department"
             :value="filters.department"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+            class="field-control"
             @change="onDepartmentChange"
           >
             <option value="">All departments</option>
@@ -146,7 +146,7 @@ onMounted(async () => {
       <div class="mt-3 flex justify-end">
         <button
           type="button"
-          class="rounded-md border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+          class="btn btn-secondary btn-sm"
           @click="clearFilters"
         >
           Clear filters

@@ -2,6 +2,7 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import StatusBadge from '@/components/ui/StatusBadge.vue';
 import UserDeactivateDialog from '@/components/users/UserDeactivateDialog.vue';
 import { deactivateUser, getUser } from '@/api/user.api';
 import { listMunicipalities, listSchools } from '@/api/lookup.api';
@@ -124,19 +125,19 @@ watch(
 <template>
   <div>
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <RouterLink :to="{ name: 'users' }" class="text-sm text-navy-800 hover:underline">← Back to users</RouterLink>
+      <RouterLink :to="{ name: 'users' }" class="link-back">← Back to users</RouterLink>
       <div v-if="user" class="flex flex-wrap gap-2">
         <RouterLink
           v-if="canWrite"
           :to="{ name: 'user-edit', params: { id: user.id } }"
-          class="rounded-md bg-navy-900 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800"
+          class="btn btn-primary"
         >
           Edit
         </RouterLink>
         <button
           v-if="canDeactivate"
           type="button"
-          class="rounded-md border border-red-200 px-4 py-2 text-sm text-red-700 hover:bg-red-50"
+          class="btn btn-danger-outline"
           @click="openDeactivate"
         >
           Deactivate
@@ -147,12 +148,12 @@ watch(
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
     <Alert v-if="error" class="mb-4" :message="error" />
 
-    <p v-if="loading" class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
+    <p v-if="loading" class="empty-panel">
       Loading user…
     </p>
     <p
       v-else-if="!error && !user"
-      class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm"
+      class="empty-panel"
     >
       User not found.
     </p>
@@ -176,16 +177,7 @@ watch(
           <div>
             <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Active status</dt>
             <dd class="mt-1">
-              <span
-                class="inline-flex rounded-full border px-2 py-0.5 text-xs font-medium"
-                :class="
-                  user.isActive
-                    ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-                    : 'border-slate-200 bg-slate-50 text-slate-600'
-                "
-              >
-                {{ user.isActive ? 'Active' : 'Inactive' }}
-              </span>
+              <StatusBadge :active="user.isActive" />
             </dd>
           </div>
           <div>

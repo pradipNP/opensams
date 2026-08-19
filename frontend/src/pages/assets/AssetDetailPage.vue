@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import StatusBadge from '@/components/ui/StatusBadge.vue';
 import AssetHistory from '@/components/assets/AssetHistory.vue';
 import { getAsset, getAssetHistory } from '@/api/asset.api';
 import { displayValue, errorMessage, formatCurrency, formatDate, formatDateTime, qrImageSrc } from '@/utils/format';
@@ -22,15 +23,6 @@ const historyLoading = ref(false);
 const historyError = ref('');
 
 const canWrite = computed(() => auth.hasPermission('assets:write'));
-
-function statusStyle(status) {
-  const color = status?.colorCode || '#64748b';
-  return {
-    color,
-    backgroundColor: `${color}22`,
-    border: `1px solid ${color}44`,
-  };
-}
 
 async function loadHistory(id) {
   historyLoading.value = true;
@@ -90,11 +82,11 @@ watch(
 <template>
   <div>
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <RouterLink :to="{ name: 'assets' }" class="text-sm text-navy-800 hover:underline">← Back to assets</RouterLink>
+      <RouterLink :to="{ name: 'assets' }" class="link-back">← Back to assets</RouterLink>
       <RouterLink
         v-if="canWrite && asset"
         :to="{ name: 'asset-edit', params: { id: asset.id } }"
-        class="rounded-md bg-navy-900 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800"
+        class="btn btn-primary"
       >
         Edit asset
       </RouterLink>
@@ -103,12 +95,12 @@ watch(
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
     <Alert v-if="error" class="mb-4" :message="error" />
 
-    <p v-if="loading" class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
+    <p v-if="loading" class="empty-panel">
       Loading asset…
     </p>
     <p
       v-else-if="!error && !asset"
-      class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm"
+      class="empty-panel"
     >
       Asset not found.
     </p>
@@ -132,12 +124,11 @@ watch(
           <div>
             <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Status</dt>
             <dd class="mt-1">
-              <span
-                class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium"
-                :style="statusStyle(asset.status)"
-              >
-                {{ asset.status?.name || '—' }}
-              </span>
+              <StatusBadge
+                :status="asset.status?.slug"
+                :label="asset.status?.name"
+                :color="asset.status?.colorCode"
+              />
             </dd>
           </div>
           <div class="sm:col-span-2">

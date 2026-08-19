@@ -29,6 +29,7 @@ defineProps({
           </div>
           <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             <h2 class="text-lg font-semibold text-navy-950">{{ title }}</h2>
+            <p class="mt-1 text-sm text-slate-500">Use your official SAMS Nepal account.</p>
             <slot />
           </section>
         </div>

@@ -1,7 +1,8 @@
 <script setup>
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import { formatAction, formatDateTime, shortId } from '@/utils/format';
+import StatusBadge from '@/components/ui/StatusBadge.vue';
+import { formatDateTime, shortId } from '@/utils/format';
 
 const props = defineProps({
   requests: { type: Array, default: () => [] },
@@ -51,19 +52,6 @@ function onSort(column) {
   emit('sort', { sort: column, order: 'desc' });
 }
 
-function statusClass(status) {
-  if (status === 'completed') {
-    return 'border-emerald-200 bg-emerald-50 text-emerald-800';
-  }
-  if (status === 'rejected' || status === 'cancelled') {
-    return 'border-red-200 bg-red-50 text-red-800';
-  }
-  if (status === 'approved' || status === 'in_progress') {
-    return 'border-sky-200 bg-sky-50 text-sky-800';
-  }
-  return 'border-amber-200 bg-amber-50 text-amber-800';
-}
-
 function canApproveRow(row) {
   return props.canApprove && row.status === 'pending';
 }
@@ -78,7 +66,7 @@ function canCompleteRow(row) {
 </script>
 
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+  <section class="table-shell">
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-slate-200 text-sm">
         <thead class="bg-slate-50 text-left text-xs font-semibold tracking-wide text-slate-600 uppercase">
@@ -112,25 +100,20 @@ function canCompleteRow(row) {
             <td class="px-4 py-3">{{ item.school?.name || '—' }}</td>
             <td class="px-4 py-3 whitespace-nowrap">{{ item.requestedBy?.fullName || '—' }}</td>
             <td class="px-4 py-3 whitespace-nowrap">
-              <span
-                class="inline-flex rounded-full border px-2 py-0.5 text-xs font-medium"
-                :class="statusClass(item.status)"
-              >
-                {{ formatAction(item.status) }}
-              </span>
+              <StatusBadge :status="item.status" />
             </td>
             <td class="px-4 py-3 whitespace-nowrap">{{ formatDateTime(item.requestedAt) }}</td>
             <td class="px-4 py-3 text-right whitespace-nowrap">
               <RouterLink
                 :to="{ name: 'maintenance-detail', params: { id: item.id } }"
-                class="text-navy-800 hover:underline"
+                class="link-action"
               >
                 View
               </RouterLink>
               <button
                 v-if="canApproveRow(item)"
                 type="button"
-                class="ml-3 text-navy-800 hover:underline"
+                class="link-action link-action-success ml-3"
                 @click="emit('approve', item)"
               >
                 Approve
@@ -138,7 +121,7 @@ function canCompleteRow(row) {
               <button
                 v-if="canRejectRow(item)"
                 type="button"
-                class="ml-3 text-navy-800 hover:underline"
+                class="link-action link-action-danger ml-3"
                 @click="emit('reject', item)"
               >
                 Reject
@@ -146,7 +129,7 @@ function canCompleteRow(row) {
               <button
                 v-if="canCompleteRow(item)"
                 type="button"
-                class="ml-3 text-navy-800 hover:underline"
+                class="link-action ml-3"
                 @click="emit('complete', item)"
               >
                 Complete
@@ -162,7 +145,7 @@ function canCompleteRow(row) {
       <div class="flex items-center gap-2">
         <button
           type="button"
-          class="rounded-md border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          class="btn btn-secondary btn-sm"
           :disabled="loading || (meta.page || 1) <= 1"
           @click="emit('page', (meta.page || 1) - 1)"
         >
@@ -171,7 +154,7 @@ function canCompleteRow(row) {
         <span>Page {{ meta.page || 1 }} of {{ meta.totalPages || 1 }}</span>
         <button
           type="button"
-          class="rounded-md border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          class="btn btn-secondary btn-sm"
           :disabled="loading || (meta.page || 1) >= (meta.totalPages || 1)"
           @click="emit('page', (meta.page || 1) + 1)"
         >

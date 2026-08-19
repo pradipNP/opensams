@@ -49,7 +49,7 @@ onMounted(loadDepartments);
 <template>
   <div>
     <div class="mb-4">
-      <button type="button" class="text-sm text-navy-800 hover:underline" @click="onCancel">← Back to categories</button>
+      <button type="button" class="link-back" @click="onCancel">← Back to categories</button>
     </div>
 
     <Alert v-if="error" class="mb-4" :message="error" />

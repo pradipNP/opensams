@@ -18,3 +18,339 @@ body,
 body {
   margin: 0;
 }
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-navy-700);
+    outline-offset: 2px;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease,
+      box-shadow 150ms ease,
+      opacity 150ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    button,
+    a,
+    input,
+    select,
+    textarea,
+    aside {
+      transition: none;
+    }
+  }
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-height: 2.25rem;
+    border-radius: 0.375rem;
+    border: 1px solid transparent;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .btn-sm {
+    min-height: 2rem;
+    padding: 0.375rem 0.75rem;
+    font-weight: 400;
+  }
+
+  .btn-primary {
+    background: var(--color-navy-900);
+    color: #fff;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-navy-800);
+  }
+
+  .btn-secondary {
+    background: #fff;
+    border-color: #e2e8f0;
+    color: #334155;
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background: #f8fafc;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border-color: #e2e8f0;
+    color: #334155;
+  }
+
+  .btn-outline:hover:not(:disabled) {
+    background: #f8fafc;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: #334155;
+  }
+
+  .btn-ghost:hover:not(:disabled) {
+    background: #f1f5f9;
+  }
+
+  .btn-success {
+    background: #047857;
+    color: #fff;
+  }
+
+  .btn-success:hover:not(:disabled) {
+    background: #065f46;
+  }
+
+  .btn-danger {
+    background: #b91c1c;
+    color: #fff;
+  }
+
+  .btn-danger:hover:not(:disabled) {
+    background: #991b1b;
+  }
+
+  .btn-danger-outline {
+    background: #fff;
+    border-color: #fecaca;
+    color: #b91c1c;
+  }
+
+  .btn-danger-outline:hover:not(:disabled) {
+    background: #fef2f2;
+  }
+
+  .btn-warning {
+    background: #b45309;
+    color: #fff;
+  }
+
+  .btn-warning:hover:not(:disabled) {
+    background: #92400e;
+  }
+
+  .field-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #334155;
+  }
+
+  .field-required::after {
+    content: " *";
+    color: #b91c1c;
+  }
+
+  .field-control {
+    width: 100%;
+    border-radius: 0.375rem;
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #0f172a;
+    outline: none;
+  }
+
+  .field-control:focus {
+    border-color: var(--color-navy-700);
+    box-shadow: 0 0 0 3px rgb(35 72 122 / 0.12);
+  }
+
+  .field-control:disabled,
+  .field-control[readonly] {
+    background: #f8fafc;
+    color: #64748b;
+    cursor: not-allowed;
+  }
+
+  .field-invalid {
+    border-color: #f87171;
+  }
+
+  .field-invalid:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgb(220 38 38 / 0.12);
+  }
+
+  .field-error {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #b91c1c;
+  }
+
+  .field-hint {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #64748b;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1rem;
+    white-space: nowrap;
+    color: #475569;
+  }
+
+  .badge-emerald {
+    border-color: #a7f3d0;
+    background: #ecfdf5;
+    color: #065f46;
+  }
+
+  .badge-amber {
+    border-color: #fde68a;
+    background: #fffbeb;
+    color: #92400e;
+  }
+
+  .badge-sky {
+    border-color: #bae6fd;
+    background: #f0f9ff;
+    color: #075985;
+  }
+
+  .badge-red {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+  }
+
+  .badge-slate {
+    border-color: #e2e8f0;
+    background: #f8fafc;
+    color: #475569;
+  }
+
+  .dialog-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(15 23 42 / 0.45);
+    padding: 1rem;
+  }
+
+  .dialog-panel {
+    width: 100%;
+    max-width: 28rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    padding: 1.25rem;
+    box-shadow: 0 20px 40px rgb(15 23 42 / 0.18);
+  }
+
+  .link-back {
+    font-size: 0.875rem;
+    color: var(--color-navy-800);
+    text-decoration: none;
+  }
+
+  .link-back:hover {
+    text-decoration: underline;
+  }
+
+  .link-action {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-navy-800);
+    text-decoration: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .link-action:hover {
+    text-decoration: underline;
+  }
+
+  .link-action-danger {
+    color: #b91c1c;
+  }
+
+  .link-action-success {
+    color: #047857;
+  }
+
+  .section-card {
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+  }
+
+  .empty-panel {
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    padding: 1.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+  }
+
+  .table-shell {
+    overflow: hidden;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+  }
+
+  .table-shell table {
+    width: 100%;
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .table-shell tbody tr {
+    transition: background-color 150ms ease;
+  }
+
+  .card-hover:hover {
+    box-shadow: 0 4px 12px rgb(15 23 42 / 0.06);
+  }
+}

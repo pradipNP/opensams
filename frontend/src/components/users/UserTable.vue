@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
+import StatusBadge from '@/components/ui/StatusBadge.vue';
 
 const props = defineProps({
   users: { type: Array, default: () => [] },
@@ -46,7 +47,7 @@ function canDeactivate(user) {
 </script>
 
 <template>
-  <section class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+  <section class="table-shell">
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-slate-200 text-sm">
         <thead class="bg-slate-50 text-left text-xs font-semibold tracking-wide text-slate-600 uppercase">
@@ -74,32 +75,23 @@ function canDeactivate(user) {
             <td class="px-4 py-3">{{ municipalityName(user) }}</td>
             <td class="px-4 py-3">{{ schoolName(user) }}</td>
             <td class="px-4 py-3 whitespace-nowrap">
-              <span
-                class="inline-flex rounded-full border px-2 py-0.5 text-xs font-medium"
-                :class="
-                  user.isActive
-                    ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-                    : 'border-slate-200 bg-slate-50 text-slate-600'
-                "
-              >
-                {{ user.isActive ? 'Active' : 'Inactive' }}
-              </span>
+              <StatusBadge :active="user.isActive" />
             </td>
             <td class="px-4 py-3 text-right whitespace-nowrap">
-              <RouterLink :to="{ name: 'user-detail', params: { id: user.id } }" class="text-navy-800 hover:underline">
+              <RouterLink :to="{ name: 'user-detail', params: { id: user.id } }" class="link-action">
                 View
               </RouterLink>
               <RouterLink
                 v-if="canWrite"
                 :to="{ name: 'user-edit', params: { id: user.id } }"
-                class="ml-3 text-navy-800 hover:underline"
+                class="link-action ml-3"
               >
                 Edit
               </RouterLink>
               <button
                 v-if="canDeactivate(user)"
                 type="button"
-                class="ml-3 text-red-700 hover:underline"
+                class="link-action link-action-danger ml-3"
                 @click="emit('deactivate', user)"
               >
                 Deactivate
@@ -115,7 +107,7 @@ function canDeactivate(user) {
       <div class="flex items-center gap-2">
         <button
           type="button"
-          class="rounded-md border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          class="btn btn-secondary btn-sm"
           :disabled="loading || (meta.page || 1) <= 1"
           @click="emit('page', (meta.page || 1) - 1)"
         >
@@ -124,7 +116,7 @@ function canDeactivate(user) {
         <span>Page {{ meta.page || 1 }} of {{ meta.totalPages || 1 }}</span>
         <button
           type="button"
-          class="rounded-md border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          class="btn btn-secondary btn-sm"
           :disabled="loading || (meta.page || 1) >= (meta.totalPages || 1)"
           @click="emit('page', (meta.page || 1) + 1)"
         >

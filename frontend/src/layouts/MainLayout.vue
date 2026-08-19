@@ -11,7 +11,7 @@ const app = useAppStore();
     <AppSidebar />
     <div class="lg:pl-64">
       <AppHeader />
-      <main class="px-4 py-6 sm:px-6 lg:px-8">
+      <main class="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8">
         <router-view />
       </main>
     </div>

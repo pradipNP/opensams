@@ -23,7 +23,7 @@ function percent(row) {
 </script>
 
 <template>
-  <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+  <section class="section-card p-6">
     <h2 class="text-lg font-semibold text-navy-950">{{ title }}</h2>
     <p v-if="!rows.length" class="mt-4 text-sm text-slate-500">{{ emptyMessage }}</p>
     <div v-else class="mt-4 overflow-x-auto">
@@ -36,13 +36,13 @@ function percent(row) {
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          <tr v-for="(row, index) in rows" :key="row.id || row.slug || index">
+          <tr v-for="(row, index) in rows" :key="row.id || row.slug || index" class="hover:bg-slate-50">
             <td class="px-3 py-2 text-navy-950">{{ row[nameKey] }}</td>
             <td class="px-3 py-2 text-right">{{ formatNumber(row[valueKey]) }}</td>
             <td class="px-3 py-2">
               <div class="flex items-center gap-2">
                 <div class="h-2 flex-1 rounded bg-slate-100">
-                  <div class="h-2 rounded bg-navy-900" :style="{ width: `${percent(row)}%` }" />
+                  <div class="h-2 rounded bg-navy-900 transition-[width] duration-300" :style="{ width: `${percent(row)}%` }" />
                 </div>
                 <span class="w-10 text-right text-xs text-slate-500">{{ percent(row) }}%</span>
               </div>

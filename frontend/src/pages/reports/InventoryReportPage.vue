@@ -47,7 +47,7 @@ const columns = [
   { key: 'status', label: 'Status', get: (row) => row.status?.name || '—' },
   { key: 'municipality', label: 'Municipality', get: (row) => row.municipality?.name || '—' },
   { key: 'school', label: 'School', get: (row) => row.school?.name || '—' },
-  { key: 'purchaseCost', label: 'Purchase Cost', sortable: true, sortKey: 'purchase_cost', get: (row) => formatCurrency(row.purchaseCost) },
+  { key: 'purchaseCost', label: 'Purchase Cost', sortable: true, sortKey: 'purchase_cost', numeric: true, get: (row) => formatCurrency(row.purchaseCost) },
   { key: 'purchaseDate', label: 'Purchase Date', sortable: true, sortKey: 'purchase_date', get: (row) => formatDate(row.purchaseDate) },
 ];
 
@@ -180,7 +180,7 @@ onMounted(async () => {
 <template>
   <div>
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <RouterLink :to="{ name: 'reports' }" class="text-sm text-navy-800 hover:underline">← Back to reports</RouterLink>
+      <RouterLink :to="{ name: 'reports' }" class="link-back">← Back to reports</RouterLink>
       <ExportButtons :exporting="exporting" @export="onExport" />
     </div>
 

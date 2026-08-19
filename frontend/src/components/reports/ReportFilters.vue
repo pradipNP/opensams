@@ -78,22 +78,22 @@ function onClear() {
   <section class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
     <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
       <div v-if="showSearch" class="md:col-span-2">
-        <label for="report-search" class="mb-1 block text-sm font-medium text-slate-700">Search</label>
+        <label for="report-search" class="field-label">Search</label>
         <input
           id="report-search"
           v-model="searchDraft"
           type="search"
           placeholder="Search report records"
-          class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+          class="field-control"
         />
       </div>
 
       <div v-if="showCategory">
-        <label for="report-category" class="mb-1 block text-sm font-medium text-slate-700">Category</label>
+        <label for="report-category" class="field-label">Category</label>
         <select
           id="report-category"
           :value="categoryId"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+          class="field-control"
           @change="onSelect('categoryId', $event)"
         >
           <option value="">All categories</option>
@@ -104,11 +104,11 @@ function onClear() {
       </div>
 
       <div v-if="showStatusId">
-        <label for="report-status-id" class="mb-1 block text-sm font-medium text-slate-700">Status</label>
+        <label for="report-status-id" class="field-label">Status</label>
         <select
           id="report-status-id"
           :value="statusId"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+          class="field-control"
           @change="onSelect('statusId', $event)"
         >
           <option value="">All statuses</option>
@@ -119,11 +119,11 @@ function onClear() {
       </div>
 
       <div v-if="showStatus">
-        <label for="report-status" class="mb-1 block text-sm font-medium text-slate-700">Status</label>
+        <label for="report-status" class="field-label">Status</label>
         <select
           id="report-status"
           :value="status"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+          class="field-control"
           @change="onSelect('status', $event)"
         >
           <option value="">All statuses</option>
@@ -134,11 +134,11 @@ function onClear() {
       </div>
 
       <div v-if="showMunicipality">
-        <label for="report-municipality" class="mb-1 block text-sm font-medium text-slate-700">Municipality</label>
+        <label for="report-municipality" class="field-label">Municipality</label>
         <select
           id="report-municipality"
           :value="municipalityId"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+          class="field-control"
           @change="onSelect('municipalityId', $event)"
         >
           <option value="">All municipalities</option>
@@ -149,11 +149,11 @@ function onClear() {
       </div>
 
       <div v-if="showSchool">
-        <label for="report-school" class="mb-1 block text-sm font-medium text-slate-700">School</label>
+        <label for="report-school" class="field-label">School</label>
         <select
           id="report-school"
           :value="schoolId"
-          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
+          class="field-control"
           @change="onSelect('schoolId', $event)"
         >
           <option value="">All schools</option>
@@ -167,7 +167,7 @@ function onClear() {
     <div class="mt-3 flex justify-end">
       <button
         type="button"
-        class="rounded-md border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+        class="btn btn-secondary btn-sm"
         @click="onClear"
       >
         Clear filters

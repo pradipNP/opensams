@@ -176,7 +176,7 @@ onMounted(async () => {
       <RouterLink
         v-if="canWrite"
         :to="{ name: 'asset-create' }"
-        class="rounded-md bg-navy-900 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800"
+        class="btn btn-primary"
       >
         Create asset
       </RouterLink>

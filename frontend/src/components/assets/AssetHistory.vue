@@ -9,7 +9,7 @@ defineProps({
 </script>
 
 <template>
-  <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+  <section class="section-card p-6">
     <h2 class="text-lg font-semibold text-navy-950">History</h2>
 
     <p v-if="loading" class="mt-4 text-sm text-slate-500">Loading history…</p>
@@ -27,7 +27,7 @@ defineProps({
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-          <tr v-for="item in records" :key="item.id">
+          <tr v-for="item in records" :key="item.id" class="hover:bg-slate-50">
             <td class="px-3 py-2 align-top">
               <p class="font-medium text-navy-950">{{ formatAction(item.action) }}</p>
               <p v-if="item.fieldName" class="mt-0.5 text-xs text-slate-500">

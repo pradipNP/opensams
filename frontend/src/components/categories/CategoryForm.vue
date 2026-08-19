@@ -103,59 +103,61 @@ function onSubmit() {
       <h2 class="text-lg font-semibold text-navy-950">Category details</h2>
       <div class="mt-4 grid gap-4 md:grid-cols-2">
         <div>
-          <label for="category-name" class="mb-1 block text-sm font-medium text-slate-700">Name</label>
+          <label for="category-name" class="field-label field-required">Name</label>
           <input
             id="category-name"
             v-model="form.name"
             type="text"
             maxlength="100"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('name') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('name') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('name'))"
           />
-          <p v-if="fieldError('name')" class="mt-1 text-xs text-red-700">{{ fieldError('name') }}</p>
+          <p v-if="fieldError('name')" class="field-error">{{ fieldError('name') }}</p>
         </div>
 
         <div>
-          <label for="category-department" class="mb-1 block text-sm font-medium text-slate-700">Department</label>
+          <label for="category-department" class="field-label field-required">Department</label>
           <input
             id="category-department"
             v-model="form.department"
             type="text"
             maxlength="100"
             list="category-department-options"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('department') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('department') ? 'field-invalid' : ''"
+            :aria-invalid="Boolean(fieldError('department'))"
           />
           <datalist id="category-department-options">
             <option v-for="item in departments" :key="item" :value="item" />
           </datalist>
-          <p v-if="fieldError('department')" class="mt-1 text-xs text-red-700">{{ fieldError('department') }}</p>
+          <p v-if="fieldError('department')" class="field-error">{{ fieldError('department') }}</p>
         </div>
 
         <div v-if="isEdit">
-          <label for="category-active" class="mb-1 block text-sm font-medium text-slate-700">Active status</label>
+          <label for="category-active" class="field-label">Active status</label>
           <select
             id="category-active"
             v-model="form.isActive"
-            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('isActive') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('isActive') ? 'field-invalid' : ''"
           >
             <option :value="true">Active</option>
             <option :value="false">Inactive</option>
           </select>
-          <p v-if="fieldError('isActive')" class="mt-1 text-xs text-red-700">{{ fieldError('isActive') }}</p>
+          <p v-if="fieldError('isActive')" class="field-error">{{ fieldError('isActive') }}</p>
         </div>
 
         <div class="md:col-span-2">
-          <label for="category-description" class="mb-1 block text-sm font-medium text-slate-700">Description</label>
+          <label for="category-description" class="field-label">Description</label>
           <textarea
             id="category-description"
             v-model="form.description"
             rows="3"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:border-navy-700"
-            :class="fieldError('description') ? 'border-red-400' : ''"
+            class="field-control"
+            :class="fieldError('description') ? 'field-invalid' : ''"
           />
-          <p v-if="fieldError('description')" class="mt-1 text-xs text-red-700">{{ fieldError('description') }}</p>
+          <p v-if="fieldError('description')" class="field-error">{{ fieldError('description') }}</p>
         </div>
       </div>
     </section>
@@ -163,14 +165,14 @@ function onSubmit() {
     <div class="flex flex-wrap gap-3">
       <button
         type="submit"
-        class="rounded-md bg-navy-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
+        class="btn btn-primary"
         :disabled="submitting"
       >
         {{ submitting ? 'Saving…' : submitLabel }}
       </button>
       <button
         type="button"
-        class="rounded-md border border-slate-200 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+        class="btn btn-secondary"
         :disabled="submitting"
         @click="emit('cancel')"
       >

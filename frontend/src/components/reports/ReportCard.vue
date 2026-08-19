@@ -9,13 +9,13 @@ defineProps({
 </script>
 
 <template>
-  <article class="flex h-full flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+  <article class="card-hover flex h-full flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-shadow">
     <h2 class="text-lg font-semibold text-navy-950">{{ title }}</h2>
     <p class="mt-2 flex-1 text-sm leading-6 text-slate-600">{{ description }}</p>
     <div class="mt-4">
       <RouterLink
         :to="to"
-        class="inline-flex rounded-md bg-navy-900 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800"
+        class="btn btn-primary"
       >
         Open
       </RouterLink>

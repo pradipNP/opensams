@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import StatusBadge from '@/components/ui/StatusBadge.vue';
 import { getSchool, listSchoolAssets } from '@/api/school.api';
 import { displayValue, errorMessage, formatCurrency, formatNumber } from '@/utils/format';
 import { useAuthStore } from '@/stores/auth.store';
@@ -24,15 +25,6 @@ const assetsPage = ref(1);
 const assetsLimit = ref(20);
 
 const canWrite = computed(() => auth.hasPermission('schools:write'));
-
-function statusStyle(status) {
-  const color = status?.colorCode || '#64748b';
-  return {
-    color,
-    backgroundColor: `${color}22`,
-    border: `1px solid ${color}44`,
-  };
-}
 
 const assetsRangeLabel = computed(() => {
   const total = Number(assetsMeta.value?.total || 0);
@@ -121,11 +113,11 @@ watch(
 <template>
   <div>
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <RouterLink :to="{ name: 'schools' }" class="text-sm text-navy-800 hover:underline">← Back to schools</RouterLink>
+      <RouterLink :to="{ name: 'schools' }" class="link-back">← Back to schools</RouterLink>
       <RouterLink
         v-if="school && canWrite"
         :to="{ name: 'school-edit', params: { id: school.id } }"
-        class="rounded-md bg-navy-900 px-4 py-2 text-sm font-medium text-white hover:bg-navy-800"
+        class="btn btn-primary"
       >
         Edit
       </RouterLink>
@@ -134,12 +126,12 @@ watch(
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
     <Alert v-if="error" class="mb-4" :message="error" />
 
-    <p v-if="loading" class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm">
+    <p v-if="loading" class="empty-panel">
       Loading school…
     </p>
     <p
       v-else-if="!error && !school"
-      class="rounded-lg border border-slate-200 bg-white p-6 text-sm text-slate-500 shadow-sm"
+      class="empty-panel"
     >
       School not found.
     </p>
@@ -171,16 +163,7 @@ watch(
           <div>
             <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Active status</dt>
             <dd class="mt-1">
-              <span
-                class="inline-flex rounded-full border px-2 py-0.5 text-xs font-medium"
-                :class="
-                  school.isActive
-                    ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-                    : 'border-slate-200 bg-slate-50 text-slate-600'
-                "
-              >
-                {{ school.isActive ? 'Active' : 'Inactive' }}
-              </span>
+              <StatusBadge :active="school.isActive" />
             </dd>
           </div>
           <div>
@@ -198,7 +181,7 @@ watch(
         </dl>
       </section>
 
-      <section class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <section class="table-shell">
         <div class="border-b border-slate-200 px-6 py-4">
           <h2 class="text-lg font-semibold text-navy-950">School assets</h2>
         </div>
@@ -225,7 +208,7 @@ watch(
                   <RouterLink
                     v-if="asset.id"
                     :to="{ name: 'asset-detail', params: { id: asset.id } }"
-                    class="text-navy-800 hover:underline"
+                    class="link-action"
                   >
                     {{ asset.assetTag }}
                   </RouterLink>
@@ -234,12 +217,11 @@ watch(
                 <td class="px-4 py-3">{{ asset.name }}</td>
                 <td class="px-4 py-3 whitespace-nowrap">{{ asset.category?.name || '—' }}</td>
                 <td class="px-4 py-3 whitespace-nowrap">
-                  <span
-                    class="inline-flex rounded-full px-2 py-0.5 text-xs font-medium"
-                    :style="statusStyle(asset.status)"
-                  >
-                    {{ asset.status?.name || '—' }}
-                  </span>
+                  <StatusBadge
+                    :status="asset.status?.slug"
+                    :label="asset.status?.name"
+                    :color="asset.status?.colorCode"
+                  />
                 </td>
               </tr>
             </tbody>
@@ -250,7 +232,7 @@ watch(
           <div class="flex items-center gap-2">
             <button
               type="button"
-              class="rounded-md border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              class="btn btn-secondary btn-sm"
               :disabled="assetsLoading || (assetsMeta.page || 1) <= 1"
               @click="onAssetsPage((assetsMeta.page || 1) - 1)"
             >
@@ -259,7 +241,7 @@ watch(
             <span>Page {{ assetsMeta.page || 1 }} of {{ assetsMeta.totalPages || 1 }}</span>
             <button
               type="button"
-              class="rounded-md border border-slate-200 px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              class="btn btn-secondary btn-sm"
               :disabled="assetsLoading || (assetsMeta.page || 1) >= (assetsMeta.totalPages || 1)"
               @click="onAssetsPage((assetsMeta.page || 1) + 1)"
             >
