@@ -30,9 +30,14 @@ async function loadPage(id) {
       listMunicipalities({ page: 1, limit: 100 }),
       listSchools({ page: 1, limit: 100 }),
     ]);
-    municipalities.value =
-      municipalityResult.status === 'fulfilled' ? municipalityResult.value.data || [] : [];
-    schools.value = schoolResult.status === 'fulfilled' ? schoolResult.value.data || [] : [];
+    const currentMunicipalityId = user.value?.municipalityId;
+    const currentSchoolId = user.value?.schoolId;
+    municipalities.value = (
+      municipalityResult.status === 'fulfilled' ? municipalityResult.value.data || [] : []
+    ).filter((item) => item.isActive !== false || item.id === currentMunicipalityId);
+    schools.value = (schoolResult.status === 'fulfilled' ? schoolResult.value.data || [] : []).filter(
+      (item) => item.isActive !== false || item.id === currentSchoolId
+    );
   } catch (err) {
     error.value = errorMessage(err, 'Unable to load this user.');
   } finally {

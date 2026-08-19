@@ -38,8 +38,14 @@ async function loadPage(id) {
     ]);
 
     statuses.value = statusResult.status === 'fulfilled' ? statusResult.value.data || [] : [];
-    categories.value = categoryResult.status === 'fulfilled' ? categoryResult.value.data || [] : [];
-    schools.value = schoolResult.status === 'fulfilled' ? schoolResult.value.data || [] : [];
+    categories.value =
+      categoryResult.status === 'fulfilled'
+        ? (categoryResult.value.data || []).filter((item) => item.isActive !== false)
+        : [];
+    schools.value =
+      schoolResult.status === 'fulfilled'
+        ? (schoolResult.value.data || []).filter((item) => item.isActive !== false)
+        : [];
   } catch (err) {
     error.value = errorMessage(err, 'Unable to load this asset.');
   } finally {

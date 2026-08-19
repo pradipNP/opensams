@@ -67,7 +67,7 @@ async function loadSchools() {
   schoolsError.value = '';
   try {
     const response = await listSchools({ page: 1, limit: 100 });
-    schools.value = response.data || [];
+    schools.value = (response.data || []).filter((item) => item.isActive !== false);
   } catch (err) {
     schools.value = [];
     schoolsError.value = errorMessage(err, 'Unable to load destination schools.');

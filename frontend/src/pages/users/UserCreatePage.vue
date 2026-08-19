@@ -22,14 +22,18 @@ async function loadLookups() {
   const failures = [];
 
   try {
-    municipalities.value = (await listMunicipalities({ page: 1, limit: 100 })).data || [];
+    municipalities.value = ((await listMunicipalities({ page: 1, limit: 100 })).data || []).filter(
+      (item) => item.isActive !== false
+    );
   } catch (err) {
     municipalities.value = [];
     failures.push(err);
   }
 
   try {
-    schools.value = (await listSchools({ page: 1, limit: 100 })).data || [];
+    schools.value = ((await listSchools({ page: 1, limit: 100 })).data || []).filter(
+      (item) => item.isActive !== false
+    );
   } catch (err) {
     schools.value = [];
     failures.push(err);

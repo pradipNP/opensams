@@ -157,7 +157,11 @@ const routes = [
         path: 'municipalities',
         name: 'municipalities',
         component: () => import('@/pages/municipalities/MunicipalityListPage.vue'),
-        meta: { requiresAuth: true, title: 'Municipalities' },
+        meta: {
+          requiresAuth: true,
+          title: 'Municipalities',
+          roles: ['state_admin', 'municipal_officer'],
+        },
       },
       {
         path: 'municipalities/create',
@@ -248,6 +252,10 @@ router.beforeEach(async (to) => {
   }
 
   if (to.meta.permission && !auth.hasPermission(to.meta.permission)) {
+    return { name: 'dashboard' };
+  }
+
+  if (Array.isArray(to.meta.roles) && to.meta.roles.length && !to.meta.roles.includes(auth.role)) {
     return { name: 'dashboard' };
   }
 

@@ -35,14 +35,16 @@ async function loadLookups() {
   }
 
   try {
-    categories.value = (await listCategories()).data || [];
+    categories.value = ((await listCategories()).data || []).filter((item) => item.isActive !== false);
   } catch (err) {
     categories.value = [];
     failures.push(err);
   }
 
   try {
-    schools.value = (await listSchools({ page: 1, limit: 100 })).data || [];
+    schools.value = ((await listSchools({ page: 1, limit: 100 })).data || []).filter(
+      (item) => item.isActive !== false
+    );
   } catch (err) {
     schools.value = [];
     failures.push(err);

@@ -20,7 +20,7 @@ async function loadMunicipalities() {
   error.value = '';
   try {
     const response = await listMunicipalities({ page: 1, limit: 100 });
-    municipalities.value = response.data || [];
+    municipalities.value = (response.data || []).filter((item) => item.isActive !== false);
   } catch (err) {
     municipalities.value = [];
     error.value = errorMessage(err, 'Unable to load municipalities.');

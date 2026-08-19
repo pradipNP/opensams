@@ -26,8 +26,10 @@ async function loadPage(id) {
     school.value = schoolResponse.data || null;
 
     const municipalityResult = await Promise.allSettled([listMunicipalities({ page: 1, limit: 100 })]);
-    municipalities.value =
-      municipalityResult[0].status === 'fulfilled' ? municipalityResult[0].value.data || [] : [];
+    const currentMunicipalityId = school.value?.municipality?.id || school.value?.municipalityId;
+    municipalities.value = (
+      municipalityResult[0].status === 'fulfilled' ? municipalityResult[0].value.data || [] : []
+    ).filter((item) => item.isActive !== false || item.id === currentMunicipalityId);
   } catch (err) {
     error.value = errorMessage(err, 'Unable to load this school.');
   } finally {
