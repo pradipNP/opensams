@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --color-navy-950: #0b1f3a;
+  --color-navy-900: #122a4a;
+  --color-navy-800: #1a3a63;
+  --color-navy-700: #23487a;
+  --color-crimson-700: #9b1c2e;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
