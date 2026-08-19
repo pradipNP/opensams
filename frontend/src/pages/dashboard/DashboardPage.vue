@@ -240,13 +240,23 @@ onMounted(loadDashboard);
     <section aria-labelledby="dashboard-kpis">
       <h2 id="dashboard-kpis" class="mb-3 text-lg font-semibold text-navy-950">Overview</h2>
       <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Total Assets" :value="cards.totalAssets" :loading="kpiLoading" />
-        <KpiCard label="Active Assets" :value="cards.activeAssets" :loading="kpiLoading" />
-        <KpiCard label="Total Value" :value="cards.totalAssetValue" :loading="kpiLoading" />
-        <KpiCard label="Total Schools" :value="cards.totalSchools" :loading="kpiLoading" />
-        <KpiCard label="Total Municipalities" :value="cards.totalMunicipalities" :loading="kpiLoading" />
-        <KpiCard label="Assets Under Maintenance" :value="cards.underMaintenance" :loading="kpiLoading" />
-        <KpiCard label="Pending Transfers" :value="cards.pendingTransfers" :loading="kpiLoading" />
+        <KpiCard label="Total Assets" :value="cards.totalAssets" :loading="kpiLoading" accent="navy" />
+        <KpiCard label="Active Assets" :value="cards.activeAssets" :loading="kpiLoading" accent="emerald" />
+        <KpiCard label="Total Value" :value="cards.totalAssetValue" :loading="kpiLoading" accent="teal" />
+        <KpiCard label="Total Schools" :value="cards.totalSchools" :loading="kpiLoading" accent="indigo" />
+        <KpiCard label="Total Municipalities" :value="cards.totalMunicipalities" :loading="kpiLoading" accent="sky" />
+        <KpiCard
+          label="Assets Under Maintenance"
+          :value="cards.underMaintenance"
+          :loading="kpiLoading"
+          accent="amber"
+        />
+        <KpiCard
+          label="Pending Transfers"
+          :value="cards.pendingTransfers"
+          :loading="kpiLoading"
+          accent="rose"
+        />
       </div>
     </section>
 
