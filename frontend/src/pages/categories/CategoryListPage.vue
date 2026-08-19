@@ -2,9 +2,10 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import CategoryTable from '@/components/categories/CategoryTable.vue';
 import { listCategories } from '@/api/lookup.api';
-import { errorMessage } from '@/utils/format';
+import { activeRecords, errorMessage } from '@/utils/format';
 import { useAuthStore } from '@/stores/auth.store';
 
 const route = useRoute();
@@ -40,7 +41,7 @@ function listParams() {
 async function loadDepartments() {
   try {
     const response = await listCategories();
-    const rows = response.data || [];
+    const rows = activeRecords(response.data);
     departments.value = [...new Set(rows.map((item) => item.department).filter(Boolean))].sort();
   } catch {
     departments.value = [];
@@ -52,7 +53,8 @@ async function loadCategories() {
   error.value = '';
   try {
     const response = await listCategories(listParams());
-    categories.value = response.data || [];
+    const rows = response.data || [];
+    categories.value = canWrite.value ? rows : activeRecords(rows);
   } catch (err) {
     error.value = errorMessage(err, 'Unable to load categories.');
     categories.value = [];
@@ -116,7 +118,13 @@ onMounted(async () => {
     </div>
 
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadCategories"
+    />
 
     <section class="mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
       <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">

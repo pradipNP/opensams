@@ -1,10 +1,12 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import StatusBadge from '@/components/ui/StatusBadge.vue';
+import UiDialog from '@/components/ui/UiDialog.vue';
 import AssetHistory from '@/components/assets/AssetHistory.vue';
-import { getAsset, getAssetHistory } from '@/api/asset.api';
+import { deactivateAsset, getAsset, getAssetHistory } from '@/api/asset.api';
 import { displayValue, errorMessage, formatCurrency, formatDate, formatDateTime, qrImageSrc } from '@/utils/format';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAppStore } from '@/stores/app.store';
@@ -22,7 +24,16 @@ const historyRecords = ref([]);
 const historyLoading = ref(false);
 const historyError = ref('');
 
+const dialog = reactive({
+  open: false,
+  submitting: false,
+  error: '',
+});
+
 const canWrite = computed(() => auth.hasPermission('assets:write'));
+const canDeactivate = computed(
+  () => canWrite.value && ['state_admin', 'school_admin'].includes(auth.role)
+);
 
 async function loadHistory(id) {
   historyLoading.value = true;
@@ -56,6 +67,37 @@ async function loadAsset(id) {
   }
 }
 
+function openDeactivate() {
+  dialog.open = true;
+  dialog.error = '';
+}
+
+function closeDeactivate() {
+  if (dialog.submitting) {
+    return;
+  }
+  dialog.open = false;
+  dialog.error = '';
+  dialog.submitting = false;
+}
+
+async function onConfirmDeactivate() {
+  if (!asset.value || dialog.submitting) {
+    return;
+  }
+  dialog.submitting = true;
+  dialog.error = '';
+  try {
+    await deactivateAsset(asset.value.id);
+    dialog.open = false;
+    dialog.submitting = false;
+    await router.push({ name: 'assets', query: { deactivated: '1' } });
+  } catch (err) {
+    dialog.error = errorMessage(err, 'Unable to deactivate this asset.');
+    dialog.submitting = false;
+  }
+}
+
 onMounted(() => {
   if (route.query.created === '1') {
     banner.value = 'Asset created successfully.';
@@ -83,17 +125,33 @@ watch(
   <div>
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
       <RouterLink :to="{ name: 'assets' }" class="link-back">← Back to assets</RouterLink>
-      <RouterLink
-        v-if="canWrite && asset"
-        :to="{ name: 'asset-edit', params: { id: asset.id } }"
-        class="btn btn-primary"
-      >
-        Edit asset
-      </RouterLink>
+      <div v-if="asset" class="flex flex-wrap gap-2">
+        <RouterLink
+          v-if="canWrite"
+          :to="{ name: 'asset-edit', params: { id: asset.id } }"
+          class="btn btn-primary"
+        >
+          Edit asset
+        </RouterLink>
+        <button
+          v-if="canDeactivate"
+          type="button"
+          class="btn btn-danger-outline"
+          @click="openDeactivate"
+        >
+          Deactivate Asset
+        </button>
+      </div>
     </div>
 
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadAsset(route.params.id)"
+    />
 
     <p v-if="loading" class="empty-panel">
       Loading asset…
@@ -197,7 +255,30 @@ watch(
         </dl>
       </section>
 
-      <AssetHistory :records="historyRecords" :loading="historyLoading" :error="historyError" />
+      <AssetHistory
+        :records="historyRecords"
+        :loading="historyLoading"
+        :error="historyError"
+        @retry="loadHistory(asset.id)"
+      />
     </div>
+
+    <UiDialog
+      :open="dialog.open"
+      title="Deactivate Asset?"
+      description="Are you sure you want to deactivate this asset? This action will remove the asset from active operational records, but its historical records will be preserved."
+      :submitting="dialog.submitting"
+      @close="closeDeactivate"
+    >
+      <Alert v-if="dialog.error" class="mt-3" :message="dialog.error" />
+      <template #actions>
+        <button type="button" class="btn btn-secondary" :disabled="dialog.submitting" @click="closeDeactivate">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" :disabled="dialog.submitting" @click="onConfirmDeactivate">
+          {{ dialog.submitting ? 'Working…' : 'Deactivate Asset' }}
+        </button>
+      </template>
+    </UiDialog>
   </div>
 </template>

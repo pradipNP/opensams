@@ -23,3 +23,7 @@ export function getAssetHistory(id, params) {
 export function getAssetQr(id) {
   return api.get(`/assets/${id}/qr`);
 }
+
+export function deactivateAsset(id) {
+  return api.delete(`/assets/${id}`);
+}

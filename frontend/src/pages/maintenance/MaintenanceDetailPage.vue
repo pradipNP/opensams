@@ -2,6 +2,7 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import StatusBadge from '@/components/ui/StatusBadge.vue';
 import MaintenanceTimeline from '@/components/maintenance/MaintenanceTimeline.vue';
 import MaintenanceActionDialog from '@/components/maintenance/MaintenanceActionDialog.vue';
@@ -156,7 +157,13 @@ watch(
     </div>
 
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadRequest(route.params.id)"
+    />
 
     <p v-if="loading" class="empty-panel">
       Loading request…

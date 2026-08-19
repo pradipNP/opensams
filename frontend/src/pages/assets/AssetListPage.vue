@@ -1,14 +1,17 @@
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import AssetFilters from '@/components/assets/AssetFilters.vue';
 import AssetTable from '@/components/assets/AssetTable.vue';
 import { listAssets } from '@/api/asset.api';
 import { listCategories, listMunicipalities, listSchools, listStatuses } from '@/api/lookup.api';
-import { errorMessage } from '@/utils/format';
+import { activeRecords, errorMessage } from '@/utils/format';
 import { useAuthStore } from '@/stores/auth.store';
 
+const route = useRoute();
+const router = useRouter();
 const auth = useAuthStore();
 
 const loading = ref(true);
@@ -36,6 +39,7 @@ const filters = reactive({
 const canWrite = computed(() => auth.hasPermission('assets:write'));
 const showMunicipality = computed(() => auth.role === 'state_admin');
 const lookupsReady = ref(false);
+const banner = ref('');
 
 async function loadLookups() {
   const tasks = [
@@ -48,7 +52,7 @@ async function loadLookups() {
       }),
     listCategories()
       .then((response) => {
-        categories.value = response.data || [];
+        categories.value = activeRecords(response.data);
       })
       .catch(() => {
         categories.value = [];
@@ -60,7 +64,7 @@ async function loadLookups() {
     tasks.push(
       listMunicipalities({ page: 1, limit: 100 })
         .then((response) => {
-          municipalities.value = response.data || [];
+          municipalities.value = activeRecords(response.data);
         })
         .catch(() => {
           municipalities.value = [];
@@ -78,7 +82,7 @@ async function loadSchools() {
       params.municipalityId = filters.municipalityId;
     }
     const response = await listSchools(params);
-    schools.value = response.data || [];
+    schools.value = activeRecords(response.data);
   } catch {
     schools.value = [];
   }
@@ -163,6 +167,10 @@ watch(
 );
 
 onMounted(async () => {
+  if (route.query.deactivated === '1') {
+    banner.value = 'Asset deactivated successfully.';
+    router.replace({ name: 'assets' });
+  }
   await loadLookups();
   lookupsReady.value = true;
   await loadAssets();
@@ -182,7 +190,14 @@ onMounted(async () => {
       </RouterLink>
     </div>
 
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadAssets"
+    />
 
     <AssetFilters
       v-model:search="filters.search"

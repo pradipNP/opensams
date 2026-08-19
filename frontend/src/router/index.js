@@ -252,14 +252,27 @@ router.beforeEach(async (to) => {
   }
 
   if (to.meta.permission && !auth.hasPermission(to.meta.permission)) {
+    if (auth.isAuthenticated) {
+      app.setNotice("You don't have permission to access this page.");
+    }
     return { name: 'dashboard' };
   }
 
   if (Array.isArray(to.meta.roles) && to.meta.roles.length && !to.meta.roles.includes(auth.role)) {
+    if (auth.isAuthenticated) {
+      app.setNotice("You don't have permission to access this page.");
+    }
     return { name: 'dashboard' };
   }
 
   return true;
+});
+
+router.afterEach((to) => {
+  if (to.name !== 'dashboard') {
+    const app = useAppStore();
+    app.clearNotice();
+  }
 });
 
 export default router;

@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import ReportTable from '@/components/reports/ReportTable.vue';
 import ExportButtons from '@/components/reports/ExportButtons.vue';
 import { getReport } from '@/api/report.api';
@@ -62,7 +63,13 @@ onMounted(loadReport);
     </div>
 
     <Alert v-if="exportError" class="mb-4" :message="exportError" />
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadReport"
+    />
 
     <ReportTable
       :rows="rows"

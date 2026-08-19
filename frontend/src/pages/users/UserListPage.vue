@@ -2,6 +2,7 @@
 import { computed, onMounted, reactive, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import UserFilters from '@/components/users/UserFilters.vue';
 import UserTable from '@/components/users/UserTable.vue';
 import UserDeactivateDialog from '@/components/users/UserDeactivateDialog.vue';
@@ -25,7 +26,7 @@ const schools = ref([]);
 const filters = reactive({
   search: '',
   role: '',
-  isActive: '',
+  isActive: 'true',
 });
 
 const dialog = reactive({
@@ -154,7 +155,13 @@ onMounted(async () => {
     </div>
 
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadUsers"
+    />
 
     <UserFilters
       v-model:search="filters.search"

@@ -2,12 +2,13 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import ReportFilters from '@/components/reports/ReportFilters.vue';
 import ReportTable from '@/components/reports/ReportTable.vue';
 import ExportButtons from '@/components/reports/ExportButtons.vue';
 import { getReport } from '@/api/report.api';
 import { listMunicipalities, listSchools } from '@/api/lookup.api';
-import { errorMessage, formatAction, formatDateTime, omitEmpty } from '@/utils/format';
+import { activeRecords, errorMessage, formatAction, formatDateTime, omitEmpty } from '@/utils/format';
 import { blobErrorMessage, downloadReportFile } from '@/utils/download';
 import { useAuthStore } from '@/stores/auth.store';
 
@@ -71,7 +72,7 @@ async function loadSchools() {
   }
   try {
     const response = await listSchools(omitEmpty({ page: 1, limit: 100, municipalityId: filters.municipalityId }));
-    schools.value = response.data || [];
+    schools.value = activeRecords(response.data);
   } catch {
     schools.value = [];
   }
@@ -83,7 +84,7 @@ async function loadLookups() {
     tasks.push(
       listMunicipalities({ page: 1, limit: 100 })
         .then((response) => {
-          municipalities.value = response.data || [];
+          municipalities.value = activeRecords(response.data);
         })
         .catch(() => {
           municipalities.value = [];
@@ -159,7 +160,13 @@ onMounted(async () => {
     </div>
 
     <Alert v-if="exportError" class="mb-4" :message="exportError" />
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadReport"
+    />
 
     <ReportFilters
       v-model:status="filters.status"

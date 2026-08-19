@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import StatusBadge from '@/components/ui/StatusBadge.vue';
 import { getSchool, listSchoolAssets } from '@/api/school.api';
 import { displayValue, errorMessage, formatCurrency, formatNumber } from '@/utils/format';
@@ -124,7 +125,13 @@ watch(
     </div>
 
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadSchool(route.params.id)"
+    />
 
     <p v-if="loading" class="empty-panel">
       Loading school…
@@ -185,7 +192,13 @@ watch(
         <div class="border-b border-slate-200 px-6 py-4">
           <h2 class="text-lg font-semibold text-navy-950">School assets</h2>
         </div>
-        <Alert v-if="assetsError" class="m-4" :message="assetsError" />
+        <ErrorRetry
+          v-if="assetsError"
+          class="m-4"
+          :message="assetsError"
+          :loading="assetsLoading"
+          @retry="loadAssets(school.id)"
+        />
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-slate-200 text-sm">
             <thead class="bg-slate-50 text-left text-xs font-semibold tracking-wide text-slate-600 uppercase">

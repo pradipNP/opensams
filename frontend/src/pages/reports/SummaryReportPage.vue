@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import KpiCard from '@/components/ui/KpiCard.vue';
 import ExportButtons from '@/components/reports/ExportButtons.vue';
 import SummarySection from '@/components/reports/SummarySection.vue';
@@ -54,7 +55,13 @@ onMounted(loadReport);
     </div>
 
     <Alert v-if="exportError" class="mb-4" :message="exportError" />
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadReport"
+    />
 
     <p v-if="loading" class="empty-panel">
       Loading summary report…

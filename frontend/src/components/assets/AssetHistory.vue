@@ -6,6 +6,8 @@ defineProps({
   loading: { type: Boolean, default: false },
   error: { type: String, default: '' },
 });
+
+defineEmits(['retry']);
 </script>
 
 <template>
@@ -13,7 +15,10 @@ defineProps({
     <h2 class="text-lg font-semibold text-navy-950">History</h2>
 
     <p v-if="loading" class="mt-4 text-sm text-slate-500">Loading history…</p>
-    <p v-else-if="error" class="mt-4 text-sm text-red-700">{{ error }}</p>
+    <div v-else-if="error" class="mt-4">
+      <p class="text-sm text-red-700">{{ error }}</p>
+      <button type="button" class="btn btn-secondary btn-sm mt-2" @click="$emit('retry')">Retry</button>
+    </div>
     <p v-else-if="!records.length" class="mt-4 text-sm text-slate-500">No history records yet.</p>
 
     <div v-else class="mt-4 overflow-x-auto">

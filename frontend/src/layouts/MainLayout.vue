@@ -1,6 +1,7 @@
 <script setup>
 import AppHeader from '@/components/layout/AppHeader.vue';
 import AppSidebar from '@/components/layout/AppSidebar.vue';
+import Alert from '@/components/ui/Alert.vue';
 import { useAppStore } from '@/stores/app.store';
 
 const app = useAppStore();
@@ -12,6 +13,7 @@ const app = useAppStore();
     <div class="lg:pl-64">
       <AppHeader />
       <main class="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8">
+        <Alert v-if="app.notice" class="mb-4" variant="warning" :message="app.notice" />
         <router-view />
       </main>
     </div>

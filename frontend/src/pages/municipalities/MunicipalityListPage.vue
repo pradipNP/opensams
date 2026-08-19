@@ -2,9 +2,10 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import MunicipalityTable from '@/components/municipalities/MunicipalityTable.vue';
 import { listMunicipalities } from '@/api/lookup.api';
-import { errorMessage } from '@/utils/format';
+import { activeRecords, errorMessage } from '@/utils/format';
 import { useAuthStore } from '@/stores/auth.store';
 
 const route = useRoute();
@@ -39,7 +40,8 @@ async function loadMunicipalities() {
   error.value = '';
   try {
     const response = await listMunicipalities(listParams());
-    municipalities.value = response.data || [];
+    const rows = response.data || [];
+    municipalities.value = canWrite.value ? rows : activeRecords(rows);
     meta.value = response.meta || { page: page.value, limit: limit.value, total: 0, totalPages: 0 };
   } catch (err) {
     error.value = errorMessage(err, 'Unable to load municipalities.');
@@ -100,7 +102,13 @@ onMounted(() => {
     </div>
 
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadMunicipalities"
+    />
 
     <section class="mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
       <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">

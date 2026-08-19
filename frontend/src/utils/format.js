@@ -92,3 +92,7 @@ export function shortId(value) {
   }
   return String(value).slice(0, 8).toUpperCase();
 }
+
+export function activeRecords(items) {
+  return (items || []).filter((item) => item?.isActive !== false);
+}

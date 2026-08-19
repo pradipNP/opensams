@@ -11,7 +11,10 @@ defineProps({
   error: { type: String, default: '' },
   empty: { type: Boolean, default: false },
   emptyMessage: { type: String, default: 'No data available.' },
+  retryable: { type: Boolean, default: false },
 });
+
+defineEmits(['retry']);
 </script>
 
 <template>
@@ -32,7 +35,17 @@ defineProps({
       <div class="h-8 w-4/5 rounded bg-slate-100" />
       <div class="h-8 w-3/5 rounded bg-slate-100" />
     </div>
-    <Alert v-else-if="error" class="mt-4" :message="error" />
+    <div v-else-if="error" class="mt-4">
+      <Alert :message="error" />
+      <button
+        v-if="retryable"
+        type="button"
+        class="btn btn-secondary btn-sm mt-2"
+        @click="$emit('retry')"
+      >
+        Retry
+      </button>
+    </div>
     <p v-else-if="empty" class="mt-4 text-sm text-slate-500">{{ emptyMessage }}</p>
     <div v-else class="mt-4">
       <slot />

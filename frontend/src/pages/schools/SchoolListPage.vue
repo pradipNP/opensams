@@ -1,11 +1,11 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import SchoolFilters from '@/components/schools/SchoolFilters.vue';
 import SchoolTable from '@/components/schools/SchoolTable.vue';
 import { listMunicipalities, listSchools } from '@/api/lookup.api';
-import { errorMessage } from '@/utils/format';
+import { activeRecords, errorMessage } from '@/utils/format';
 import { useAuthStore } from '@/stores/auth.store';
 
 const auth = useAuthStore();
@@ -47,7 +47,7 @@ async function loadMunicipalities() {
   }
   try {
     const response = await listMunicipalities({ page: 1, limit: 100 });
-    municipalities.value = response.data || [];
+    municipalities.value = activeRecords(response.data);
   } catch {
     municipalities.value = [];
   }
@@ -58,7 +58,8 @@ async function loadSchools() {
   error.value = '';
   try {
     const response = await listSchools(listParams());
-    schools.value = response.data || [];
+    const rows = response.data || [];
+    schools.value = canWrite.value ? rows : activeRecords(rows);
     meta.value = response.meta || { page: page.value, limit: limit.value, total: 0, totalPages: 0 };
   } catch (err) {
     error.value = errorMessage(err, 'Unable to load schools.');
@@ -105,7 +106,13 @@ onMounted(async () => {
       </RouterLink>
     </div>
 
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadSchools"
+    />
 
     <SchoolFilters
       v-model:search="filters.search"

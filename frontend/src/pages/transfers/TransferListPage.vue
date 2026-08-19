@@ -2,6 +2,7 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import TransferFilters from '@/components/transfers/TransferFilters.vue';
 import TransferTable from '@/components/transfers/TransferTable.vue';
 import TransferActionDialog from '@/components/transfers/TransferActionDialog.vue';
@@ -13,7 +14,7 @@ import {
   rejectTransfer,
 } from '@/api/transfer.api';
 import { listMunicipalities, listSchools } from '@/api/lookup.api';
-import { errorMessage } from '@/utils/format';
+import { activeRecords, errorMessage } from '@/utils/format';
 import { useAuthStore } from '@/stores/auth.store';
 
 const auth = useAuthStore();
@@ -126,7 +127,7 @@ async function loadSchools() {
       params.municipalityId = filters.municipalityId;
     }
     const response = await listSchools(params);
-    schools.value = response.data || [];
+    schools.value = activeRecords(response.data);
   } catch {
     schools.value = [];
   }
@@ -138,7 +139,7 @@ async function loadLookups() {
     tasks.push(
       listMunicipalities({ page: 1, limit: 100 })
         .then((response) => {
-          municipalities.value = response.data || [];
+          municipalities.value = activeRecords(response.data);
         })
         .catch(() => {
           municipalities.value = [];
@@ -261,7 +262,13 @@ onMounted(async () => {
     </div>
 
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadTransfers"
+    />
 
     <TransferFilters
       v-model:search="filters.search"

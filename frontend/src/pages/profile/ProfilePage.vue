@@ -1,6 +1,5 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import Alert from '@/components/ui/Alert.vue';
 import { getCurrentUser } from '@/api/auth.api';
 import { listMunicipalities, listSchools } from '@/api/lookup.api';
 import { displayValue, errorMessage, formatAction, formatDateTime } from '@/utils/format';
@@ -98,7 +97,13 @@ onMounted(loadProfile);
       </p>
     </div>
 
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadProfile"
+    />
 
     <p v-if="loading" class="empty-panel">Loading profile…</p>
     <p v-else-if="!error && !profile" class="empty-panel">Profile not found.</p>

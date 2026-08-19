@@ -1,7 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import { RouterLink } from 'vue-router';
-import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import KpiCard from '@/components/ui/KpiCard.vue';
 import DashboardSection from '@/components/dashboard/DashboardSection.vue';
 import DashboardBarList from '@/components/dashboard/DashboardBarList.vue';
@@ -76,58 +75,6 @@ const municipalitySectionLinkLabel = computed(() => {
   return 'View assets';
 });
 
-const quickActions = computed(() => {
-  const actions = [];
-
-  if (auth.hasPermission('assets:write')) {
-    actions.push({ label: 'Register asset', to: { name: 'asset-create' } });
-  } else {
-    actions.push({ label: 'View assets', to: { name: 'assets' } });
-  }
-
-  if (auth.hasPermission('maintenance:request')) {
-    actions.push({ label: 'Create maintenance request', to: { name: 'maintenance-create' } });
-  } else {
-    actions.push({ label: 'View maintenance', to: { name: 'maintenance' } });
-  }
-
-  if (auth.hasPermission('transfers:request')) {
-    actions.push({ label: 'Create transfer', to: { name: 'transfer-create' } });
-  } else {
-    actions.push({ label: 'View transfers', to: { name: 'transfers' } });
-  }
-
-  if (auth.hasPermission('users:read')) {
-    actions.push({ label: 'Manage users', to: { name: 'users' } });
-  }
-
-  if (auth.hasPermission('schools:write')) {
-    actions.push({ label: 'Manage schools', to: { name: 'schools' } });
-  } else if (auth.hasPermission('schools:read')) {
-    actions.push({ label: 'View schools', to: { name: 'schools' } });
-  }
-
-  if (canViewMunicipalities.value) {
-    actions.push({
-      label: auth.hasPermission('municipalities:write') ? 'Manage municipalities' : 'View municipalities',
-      to: { name: 'municipalities' },
-    });
-  }
-
-  if (auth.hasPermission('reports:read')) {
-    actions.push({ label: 'View reports', to: { name: 'reports' } });
-  }
-
-  return actions;
-});
-
-function settledData(result) {
-  if (result.status !== 'fulfilled') {
-    return { ok: false, error: errorMessage(result.reason, 'Unable to load this section.'), data: null };
-  }
-  return { ok: true, error: '', data: result.value?.data || null };
-}
-
 function chartItems(chart) {
   if (!chart) {
     return [];
@@ -167,27 +114,12 @@ async function loadMunicipalityCount() {
   }
 }
 
-async function loadDashboard() {
+async function loadKpiSection() {
   kpiLoading.value = true;
   kpiError.value = '';
-  category.value = emptySection();
-  status.value = emptySection();
-  municipalityValue.value = emptySection();
-  transfers.value = emptySection();
-
-  const [kpisResult, categoryResult, statusResult, valueResult, municipalityResult, transferResult] =
-    await Promise.allSettled([
-      getKpis(),
-      getCategoryChart(),
-      getStatusChart(),
-      getValueByMunicipalityChart(),
-      getMunicipalityChart(),
-      getTransferChart(),
-    ]);
-
-  const kpiPayload = settledData(kpisResult);
-  if (kpiPayload.ok) {
-    const data = kpiPayload.data || {};
+  try {
+    const response = await getKpis();
+    const data = response.data || {};
     kpis.value = data;
     cards.value.totalAssets = formatNumber(data.totalAssets);
     cards.value.activeAssets = formatNumber(data.activeAssets);
@@ -201,63 +133,96 @@ async function loadDashboard() {
     } else {
       await loadMunicipalityCount();
     }
-  } else {
+  } catch (err) {
     kpis.value = null;
-    kpiError.value = kpiPayload.error || 'Unable to load dashboard figures.';
+    kpiError.value = errorMessage(err, 'Unable to load dashboard figures.');
+  } finally {
+    kpiLoading.value = false;
   }
-  kpiLoading.value = false;
+}
 
-  const categoryPayload = settledData(categoryResult);
-  category.value.loading = false;
-  if (categoryPayload.ok) {
-    category.value.items = sortByValueDesc(chartItems(categoryPayload.data));
-  } else {
-    category.value.error = categoryPayload.error;
+async function loadCategorySection() {
+  category.value.loading = true;
+  category.value.error = '';
+  try {
+    const response = await getCategoryChart();
+    category.value.items = sortByValueDesc(chartItems(response.data));
+  } catch (err) {
+    category.value.error = errorMessage(err, 'Unable to load category data.');
+  } finally {
+    category.value.loading = false;
   }
+}
 
-  const statusPayload = settledData(statusResult);
-  status.value.loading = false;
-  if (statusPayload.ok) {
-    status.value.items = chartItems(statusPayload.data).map((item) => ({
+async function loadStatusSection() {
+  status.value.loading = true;
+  status.value.error = '';
+  try {
+    const response = await getStatusChart();
+    status.value.items = chartItems(response.data).map((item) => ({
       ...item,
       hint: item.hint || '',
     }));
-  } else {
-    status.value.error = statusPayload.error;
+  } catch (err) {
+    status.value.error = errorMessage(err, 'Unable to load status data.');
+  } finally {
+    status.value.loading = false;
   }
+}
 
-  const valuePayload = settledData(valueResult);
-  const municipalityPayload = settledData(municipalityResult);
-  municipalityValue.value.loading = false;
-  if (valuePayload.ok) {
+async function loadMunicipalityValueSection() {
+  municipalityValue.value.loading = true;
+  municipalityValue.value.error = '';
+  try {
+    const [valueResponse, municipalityResponse] = await Promise.all([
+      getValueByMunicipalityChart(),
+      getMunicipalityChart(),
+    ]);
     const counts = {};
-    if (municipalityPayload.ok) {
-      chartItems(municipalityPayload.data).forEach((item) => {
-        counts[item.id] = item.value;
-      });
-    }
-    municipalityValue.value.items = sortByValueDesc(chartItems(valuePayload.data)).map((item) => ({
+    chartItems(municipalityResponse.data).forEach((item) => {
+      counts[item.id] = item.value;
+    });
+    municipalityValue.value.items = sortByValueDesc(chartItems(valueResponse.data)).map((item) => ({
       ...item,
       display: formatCurrency(item.value),
       hint: counts[item.id] != null ? `${formatNumber(counts[item.id])} assets` : '',
     }));
-  } else {
-    municipalityValue.value.error = valuePayload.error;
+  } catch (err) {
+    municipalityValue.value.error = errorMessage(err, 'Unable to load municipality value data.');
+  } finally {
+    municipalityValue.value.loading = false;
   }
+}
 
-  const transferPayload = settledData(transferResult);
-  transfers.value.loading = false;
-  if (transferPayload.ok) {
-    transfers.value.items = chartItems(transferPayload.data);
-  } else if (kpis.value) {
-    transfers.value.items = [
-      { name: 'Pending', value: Number(kpis.value.pendingTransfers || 0) },
-      { name: 'Approved', value: Number(kpis.value.approvedTransfers || 0) },
-      { name: 'Completed', value: Number(kpis.value.completedTransfers || 0) },
-    ];
-  } else {
-    transfers.value.error = transferPayload.error;
+async function loadTransferSection() {
+  transfers.value.loading = true;
+  transfers.value.error = '';
+  try {
+    const response = await getTransferChart();
+    transfers.value.items = chartItems(response.data);
+  } catch (err) {
+    if (kpis.value) {
+      transfers.value.items = [
+        { name: 'Pending', value: Number(kpis.value.pendingTransfers || 0) },
+        { name: 'Approved', value: Number(kpis.value.approvedTransfers || 0) },
+        { name: 'Completed', value: Number(kpis.value.completedTransfers || 0) },
+      ];
+    } else {
+      transfers.value.error = errorMessage(err, 'Unable to load transfer data.');
+    }
+  } finally {
+    transfers.value.loading = false;
   }
+}
+
+async function loadDashboard() {
+  await Promise.all([
+    loadKpiSection(),
+    loadCategorySection(),
+    loadStatusSection(),
+    loadMunicipalityValueSection(),
+    loadTransferSection(),
+  ]);
 }
 
 onMounted(loadDashboard);
@@ -265,7 +230,12 @@ onMounted(loadDashboard);
 
 <template>
   <div class="space-y-6">
-    <Alert v-if="kpiError" :message="kpiError" />
+    <ErrorRetry
+      v-if="kpiError"
+      :message="kpiError"
+      :loading="kpiLoading"
+      @retry="loadKpiSection"
+    />
 
     <section aria-labelledby="dashboard-kpis">
       <h2 id="dashboard-kpis" class="mb-3 text-lg font-semibold text-navy-950">Overview</h2>
@@ -290,6 +260,8 @@ onMounted(loadDashboard);
         :error="category.error"
         :empty="!category.items.length"
         empty-message="No asset category data available."
+        retryable
+        @retry="loadCategorySection"
       >
         <DashboardDonutChart :items="category.items" />
       </DashboardSection>
@@ -303,6 +275,8 @@ onMounted(loadDashboard);
         :error="status.error"
         :empty="!status.items.length"
         empty-message="No asset status data available."
+        retryable
+        @retry="loadStatusSection"
       >
         <DashboardBarList :items="status.items" />
       </DashboardSection>
@@ -317,6 +291,8 @@ onMounted(loadDashboard);
       :error="municipalityValue.error"
       :empty="!municipalityValue.items.length"
       empty-message="No municipality asset value data available."
+      retryable
+      @retry="loadMunicipalityValueSection"
     >
       <DashboardBarList :items="municipalityValue.items" />
     </DashboardSection>
@@ -353,6 +329,8 @@ onMounted(loadDashboard);
         :error="transfers.error"
         :empty="!transfers.items.length"
         empty-message="No transfer data available."
+        retryable
+        @retry="loadTransferSection"
       >
         <DashboardBarList :items="transfers.items" />
       </DashboardSection>

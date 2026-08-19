@@ -2,6 +2,7 @@
 import { computed, onMounted, reactive, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import Alert from '@/components/ui/Alert.vue';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import MaintenanceFilters from '@/components/maintenance/MaintenanceFilters.vue';
 import MaintenanceTable from '@/components/maintenance/MaintenanceTable.vue';
 import MaintenanceActionDialog from '@/components/maintenance/MaintenanceActionDialog.vue';
@@ -12,7 +13,7 @@ import {
   rejectMaintenance,
 } from '@/api/maintenance.api';
 import { listSchools } from '@/api/lookup.api';
-import { errorMessage } from '@/utils/format';
+import { activeRecords, errorMessage } from '@/utils/format';
 import { useAuthStore } from '@/stores/auth.store';
 
 const auth = useAuthStore();
@@ -112,7 +113,7 @@ async function loadSchools() {
   }
   try {
     const response = await listSchools({ page: 1, limit: 100 });
-    schools.value = response.data || [];
+    schools.value = activeRecords(response.data);
   } catch {
     schools.value = [];
   }
@@ -216,7 +217,13 @@ onMounted(async () => {
     </div>
 
     <Alert v-if="banner" class="mb-4" variant="success" :message="banner" />
-    <Alert v-if="error" class="mb-4" :message="error" />
+    <ErrorRetry
+      v-if="error"
+      class="mb-4"
+      :message="error"
+      :loading="loading"
+      @retry="loadRequests"
+    />
 
     <MaintenanceFilters
       v-model:search="filters.search"

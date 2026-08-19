@@ -4,12 +4,21 @@ import { computed, ref } from 'vue';
 export const useAppStore = defineStore('app', () => {
   const sidebarOpen = ref(false);
   const pageTitle = ref('Dashboard');
+  const notice = ref('');
 
   const appName = computed(() => 'SAMS Nepal');
 
   function setPageTitle(title) {
     pageTitle.value = title;
     document.title = title ? `${title} — SAMS Nepal` : 'SAMS Nepal';
+  }
+
+  function setNotice(message) {
+    notice.value = message || '';
+  }
+
+  function clearNotice() {
+    notice.value = '';
   }
 
   function toggleSidebar() {
@@ -23,8 +32,11 @@ export const useAppStore = defineStore('app', () => {
   return {
     sidebarOpen,
     pageTitle,
+    notice,
     appName,
     setPageTitle,
+    setNotice,
+    clearNotice,
     toggleSidebar,
     closeSidebar,
   };
