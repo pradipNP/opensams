@@ -5,6 +5,7 @@ import Alert from '@/components/ui/Alert.vue';
 import KpiCard from '@/components/ui/KpiCard.vue';
 import DashboardSection from '@/components/dashboard/DashboardSection.vue';
 import DashboardBarList from '@/components/dashboard/DashboardBarList.vue';
+import DashboardDonutChart from '@/components/dashboard/DashboardDonutChart.vue';
 import {
   getCategoryChart,
   getKpis,
@@ -264,27 +265,6 @@ onMounted(loadDashboard);
 
 <template>
   <div class="space-y-6">
-    <div>
-      <p class="text-sm text-slate-600">
-        Scoped summary for {{ auth.user?.fullName }} ({{ auth.user?.roleName }}). Figures follow your assigned
-        municipality or school.
-      </p>
-    </div>
-
-    <section v-if="quickActions.length" aria-labelledby="dashboard-quick-actions">
-      <h2 id="dashboard-quick-actions" class="mb-3 text-sm font-semibold text-navy-950">Quick actions</h2>
-      <div class="flex flex-wrap gap-2">
-        <RouterLink
-          v-for="action in quickActions"
-          :key="action.label"
-          :to="action.to"
-          class="btn btn-secondary btn-sm"
-        >
-          {{ action.label }}
-        </RouterLink>
-      </div>
-    </section>
-
     <Alert v-if="kpiError" :message="kpiError" />
 
     <section aria-labelledby="dashboard-kpis">
@@ -311,7 +291,7 @@ onMounted(loadDashboard);
         :empty="!category.items.length"
         empty-message="No asset category data available."
       >
-        <DashboardBarList :items="category.items" />
+        <DashboardDonutChart :items="category.items" />
       </DashboardSection>
 
       <DashboardSection

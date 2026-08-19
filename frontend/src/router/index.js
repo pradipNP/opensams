@@ -22,6 +22,12 @@ const routes = [
         meta: { requiresAuth: true, title: 'Dashboard' },
       },
       {
+        path: 'profile',
+        name: 'profile',
+        component: () => import('@/pages/profile/ProfilePage.vue'),
+        meta: { requiresAuth: true, title: 'My profile' },
+      },
+      {
         path: 'assets',
         name: 'assets',
         component: () => import('@/pages/assets/AssetListPage.vue'),
