@@ -26,6 +26,13 @@ async function onLogout() {
         >
           Menu
         </button>
+        <img
+          src="/assets/logo.png"
+          alt="SAMS Nepal"
+          class="h-8 w-8 shrink-0 object-contain lg:hidden"
+          width="32"
+          height="32"
+        />
         <h1 class="truncate text-sm font-semibold text-navy-950 sm:text-base">{{ app.pageTitle }}</h1>
       </div>
 

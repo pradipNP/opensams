@@ -85,10 +85,20 @@ function isActive(item) {
     :class="app.sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
     aria-label="Main navigation"
   >
-    <div class="border-b border-white/10 px-5 py-5">
-      <p class="text-[11px] font-semibold tracking-[0.18em] text-slate-400 uppercase">Government of Nepal</p>
-      <p class="mt-1 text-lg font-semibold text-white">SAMS Nepal</p>
-      <p class="mt-1 text-xs text-slate-400">School Asset Management</p>
+    <div class="border-b border-white/10 px-5 py-4">
+      <div class="flex items-center gap-3">
+        <img
+          src="/assets/logo.png"
+          alt=""
+          class="h-10 w-10 shrink-0 rounded-md bg-white object-contain p-0.5"
+          width="40"
+          height="40"
+        />
+        <div class="min-w-0">
+          <p class="truncate text-sm font-semibold leading-tight text-white">SAMS Nepal</p>
+          <p class="mt-0.5 text-[11px] leading-snug text-slate-400">School Asset Management System</p>
+        </div>
+      </div>
     </div>
 
     <nav class="flex-1 overflow-y-auto px-3 py-4">
