@@ -32,16 +32,16 @@ This guide describes how to build and run the SAMS Nepal frontend and backend fo
 | `JWT_EXPIRES_IN` | No (default `24h`) | Token lifetime |
 | `CORS_ORIGIN` | Recommended | Exact frontend origin, e.g. `https://app.example.com` |
 
-Example:
+Example (placeholders only — replace every value on the host):
 
 ```
 NODE_ENV=production
-PORT=5001
+PORT=5000
 APP_VERSION=1.0.0
-DATABASE_URL=postgresql://user:password@host:5432/sams_nepal?sslmode=require
-JWT_SECRET=replace-with-a-long-random-secret
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require
+JWT_SECRET=REPLACE_WITH_LONG_RANDOM_SECRET
 JWT_EXPIRES_IN=24h
-CORS_ORIGIN=https://your-frontend-origin
+CORS_ORIGIN=https://YOUR_FRONTEND_ORIGIN
 ```
 
 Copy `backend/.env.example` and replace secrets. Never commit production secrets.
@@ -55,7 +55,7 @@ Copy `backend/.env.example` and replace secrets. Never commit production secrets
 Example:
 
 ```
-VITE_API_URL=https://your-api-origin/api/v1
+VITE_API_URL=https://YOUR_API_HOST/api/v1
 ```
 
 Copy `frontend/.env.example`. Vite inlines this value at **build** time. Changing it later requires a new frontend build.
@@ -112,6 +112,69 @@ Preview the production build locally:
 ```
 npm run preview
 ```
+
+## Cloudflare Pages (frontend)
+
+The frontend is a static Vite build and can be hosted on Cloudflare Pages.
+
+1. Set the Pages project root to `frontend` (or set the build root equivalently in the dashboard).
+2. Build command: `npm ci && npm run build`
+3. Output directory: `dist`
+4. Environment variable (build time): `VITE_API_URL=https://YOUR_API_HOST/api/v1`
+5. Vue Router history mode: `frontend/public/_redirects` is copied into `dist` and sends unknown paths to `index.html`. Existing files (including `/assets/logo.png`) are still served when present.
+6. Confirm the Pages origin is the exact value used in backend `CORS_ORIGIN` (scheme + host, no trailing slash).
+
+Do not set `VITE_API_URL` to a localhost address in the Pages build.
+
+## Render (backend)
+
+The API is a Node.js process and can run as a Render Web Service.
+
+1. Root directory: `backend`
+2. Runtime: Node 20 or later (`engines.node` is `>=20`)
+3. Build command: `npm ci`
+4. Start command: `npm start`
+5. Health check path: `/health` (also available at `/api/v1/health`)
+6. Set `PORT` from Render (the app already listens on `process.env.PORT`)
+
+Environment variables on Render (never commit these):
+
+| Variable | Notes |
+|---|---|
+| `NODE_ENV` | `production` |
+| `DATABASE_URL` | Neon (or other) connection string with `sslmode=require` |
+| `JWT_SECRET` | Long unique secret, not any documented placeholder |
+| `CORS_ORIGIN` | Exact Cloudflare Pages origin |
+| `JWT_EXPIRES_IN` | Optional; default `24h` |
+| `APP_VERSION` | Optional; default `1.0.0` |
+
+OpenAPI UI is served at `/api/docs`. Restrict or disable it on the platform if you do not want the contract public.
+
+`backend/Dockerfile` can be used instead of a native Node service if you prefer a container. `.dockerignore` excludes `.env`.
+
+Logout token revocation is stored in process memory. A multi-instance Render service will not share that list; use a single instance unless you add shared storage later.
+
+## Neon (database)
+
+PostgreSQL on Neon is compatible with this API.
+
+1. Create a Neon project and database (name is your choice; local docs often use `sams_nepal`).
+2. Copy the connection string into Render `DATABASE_URL`. Include `sslmode=require`.
+3. From a machine that can reach Neon, apply schema:
+
+```
+psql "$DATABASE_URL" -f database/run_migrations.sql
+```
+
+4. Optional development seed:
+
+```
+psql "$DATABASE_URL" -f database/run_seeds.sql
+```
+
+Do **not** load development seeds into a public production database without rotating every seeded password. Seed accounts are for local/demo use.
+
+The API enables TLS for the pool when `DATABASE_URL` contains `sslmode=require` or `PGSSLMODE=require`.
 
 ## Production checklist
 

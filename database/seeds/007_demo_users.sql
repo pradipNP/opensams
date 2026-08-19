@@ -1,6 +1,7 @@
 -- SAMS Nepal — Seed 007: Demo Users
--- Development password for all demo accounts: password
--- bcrypt ($2b$10$, cost 10) — regenerate for production via backend auth setup
+-- DEVELOPMENT / DEMO ONLY. Do not load these accounts into a public production database.
+-- Regenerate hashes for any environment that will be reachable on the internet
+-- using backend/scripts/generate-password-hash.js with a unique password.
 
 INSERT INTO users (
     id, role_id, province_id, municipality_id, school_id,

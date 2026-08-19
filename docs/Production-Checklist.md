@@ -11,7 +11,7 @@ Related documents: `docs/Deployment-Guide.md`, `docs/Technical-Documentation.md`
 - [ ] `frontend/.env` (or CI secrets) sets `VITE_API_URL` to the **public** API base including `/api/v1`
 - [ ] `VITE_API_URL` is **not** `http://localhost:...` in the production build
 - [ ] From `frontend/`: `npm ci` then `npm run build` succeeds
-- [ ] `frontend/dist/` is published to the static host
+- [ ] `frontend/dist/` is published to the static host (Cloudflare Pages: root `frontend`, output `dist`)
 - [ ] SPA fallback is configured (unknown paths serve `index.html`)
 - [ ] Favicon and `/assets/logo.png` are reachable on the live origin
 - [ ] Browser title shows `SAMS Nepal` after login
@@ -27,7 +27,7 @@ Frontend origin: http://localhost:5173
 
 - [ ] `NODE_ENV=production`
 - [ ] `PORT` is set to the platform listen port
-- [ ] From `backend/`: `npm ci` then `npm start`
+- [ ] From `backend/`: `npm ci` then `npm start` (Render: root `backend`, health `/health`)
 - [ ] Reverse proxy or platform TLS terminates HTTPS
 - [ ] `CORS_ORIGIN` is the exact frontend origin (scheme + host, no trailing path)
 - [ ] `GET /health` and `GET /api/v1/health` return success
@@ -42,7 +42,7 @@ CORS_ORIGIN=http://localhost:5173
 
 ## Database deployment
 
-- [ ] Production PostgreSQL instance is separate from development
+- [ ] Production PostgreSQL instance is separate from development (Neon or equivalent)
 - [ ] `DATABASE_URL` points at production and uses SSL (`sslmode=require` where required)
 - [ ] Migrations applied: `database/run_migrations.sql`
 - [ ] Seed data reviewed: development passwords from `database/run_seeds.sql` are **not** left in production
@@ -51,8 +51,10 @@ CORS_ORIGIN=http://localhost:5173
 Local development reference (not production):
 
 ```
-DATABASE_URL=postgresql://postgres:postgres@localhost:5433/sams_nepal
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE
 ```
+
+Do not put production connection strings in this repository.
 
 ## Environment variables
 
@@ -62,7 +64,7 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5433/sams_nepal
 | `NODE_ENV` | Backend | `development` | `production` |
 | `PORT` | Backend | `5000` or `5001` | Platform port |
 | `APP_VERSION` | Backend | `1.0.0` | Release version |
-| `DATABASE_URL` | Backend | localhost / Docker `5433` | Managed DB + SSL |
+| `DATABASE_URL` | Backend | `postgresql://USER:PASSWORD@HOST:PORT/DATABASE` | Managed DB + SSL |
 | `JWT_SECRET` | Backend | dev placeholder | Long unique secret |
 | `JWT_EXPIRES_IN` | Backend | `24h` | Policy-appropriate TTL |
 | `CORS_ORIGIN` | Backend | `http://localhost:5173` | Live frontend origin |

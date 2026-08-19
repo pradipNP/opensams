@@ -11,8 +11,8 @@
 
 | Environment | URL |
 |-------------|-----|
-| Production | `https://sams-api.onrender.com/api/v1` |
-| Development | `http://localhost:5000/api/v1` |
+| Production | `https://<your-api-host>/api/v1` |
+| Development | `http://localhost:<port>/api/v1` (see `backend/.env`; often port `5001`) |
 
 ### Authentication
 
@@ -96,8 +96,8 @@ Public. Authenticate user and receive JWT.
 
 ```json
 {
-  "email": "state.admin@sams.gov.np",
-  "password": "password"
+  "email": "user@example.com",
+  "password": "<password>"
 }
 ```
 
@@ -111,8 +111,8 @@ Public. Authenticate user and receive JWT.
     "expiresIn": "24h",
     "user": {
       "id": "uuid",
-      "email": "state.admin@sams.gov.np",
-      "fullName": "Rajesh Sharma",
+      "email": "user@example.com",
+      "fullName": "Example User",
       "role": "state_admin",
       "roleName": "State Administrator",
       "permissions": ["assets:read", "assets:write", ...],
@@ -1168,7 +1168,7 @@ State Administrator only. `password_hash` is never returned.
 ```json
 {
   "email": "school.new@sams.gov.np",
-  "password": "SecurePass@123",
+  "password": "<new-password>",
   "fullName": "New School Admin",
   "role": "school_admin",
   "provinceId": "uuid",

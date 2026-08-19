@@ -1,8 +1,25 @@
+# Dependencies
 node_modules/
+
+# Environment files (committed templates are un-ignored below)
 .env
-*.log
-.DS_Store
-Updated/node_modules/
-Updated/backend/node_modules/
-Updated/
+.env.*
+!.env.example
+!**/.env.example
+
+# Build output
+dist/
 frontend/dist/
+
+# Logs and OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Keys
+*.pem
+*.key
+
+# Local leftovers
+Updated/

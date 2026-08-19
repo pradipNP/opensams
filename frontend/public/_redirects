@@ -1,0 +1,3 @@
+# Cloudflare Pages: SPA fallback for Vue Router history mode.
+# Existing files (logo, hashed assets) are still served when they exist.
+/*    /index.html   200

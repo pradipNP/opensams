@@ -22,9 +22,9 @@ SAMS Nepal is a web application for tracking school assets, maintenance, transfe
 Typical local values:
 
 - Frontend: `http://localhost:5173`
-- API: `http://localhost:5001` (`PORT=5001` in `backend/.env`)
+- API: `http://localhost:5001` (`PORT=5001` in your local `backend/.env`, which is not committed)
 - Frontend API base: `VITE_API_URL=http://localhost:5001/api/v1`
-- PostgreSQL: see `backend/.env.example` (`localhost:5433` when using the published Docker port)
+- PostgreSQL: set `DATABASE_URL` in local `backend/.env` using placeholders from `backend/.env.example`
 
 ```
 cd backend
