@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
+import { APP_NAME } from '@/constants/app';
 
 export const useAppStore = defineStore('app', () => {
   const sidebarOpen = ref(false);
   const pageTitle = ref('Dashboard');
   const notice = ref('');
 
-  const appName = computed(() => 'SAMS Nepal');
+  const appName = computed(() => APP_NAME);
 
   function setPageTitle(title) {
     pageTitle.value = title;
-    document.title = title ? `${title} — SAMS Nepal` : 'SAMS Nepal';
+    document.title = title ? `${title} — ${APP_NAME}` : APP_NAME;
   }
 
   function setNotice(message) {

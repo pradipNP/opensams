@@ -1,9 +1,12 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import ErrorRetry from '@/components/ui/ErrorRetry.vue';
 import { getCurrentUser } from '@/api/auth.api';
 import { listMunicipalities, listSchools } from '@/api/lookup.api';
 import { displayValue, errorMessage, formatAction, formatDateTime } from '@/utils/format';
 import { useAppStore } from '@/stores/app.store';
+import { APP_LOGO_SRC, APP_NAME, APP_VERSION } from '@/constants/app';
 
 const app = useAppStore();
 
@@ -159,6 +162,32 @@ onMounted(loadProfile);
           </li>
         </ul>
         <p v-else class="mt-4 text-sm text-slate-500">No permissions listed.</p>
+      </section>
+
+      <section class="section-card p-6">
+        <h3 class="text-lg font-semibold text-navy-950">System information</h3>
+        <div class="mt-4 flex items-start gap-4">
+          <img
+            :src="APP_LOGO_SRC"
+            :alt="APP_NAME"
+            class="h-12 w-12 shrink-0 object-contain"
+            width="48"
+            height="48"
+          />
+          <dl class="grid min-w-0 flex-1 gap-4 sm:grid-cols-2">
+            <div>
+              <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Application</dt>
+              <dd class="mt-1 text-sm text-navy-950">{{ APP_NAME }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-medium tracking-wide text-slate-500 uppercase">Version</dt>
+              <dd class="mt-1 text-sm text-navy-950">v{{ APP_VERSION }}</dd>
+            </div>
+          </dl>
+        </div>
+        <RouterLink :to="{ name: 'about' }" class="btn btn-secondary btn-sm mt-5">
+          About System
+        </RouterLink>
       </section>
     </div>
   </div>

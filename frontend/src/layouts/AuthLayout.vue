@@ -1,4 +1,6 @@
 <script setup>
+import { APP_FULL_NAME, APP_LOGO_SRC, APP_NAME, APP_TAGLINE } from '@/constants/app';
+
 defineProps({
   title: {
     type: String,
@@ -12,7 +14,7 @@ defineProps({
     <div class="grid min-h-screen lg:grid-cols-[420px_1fr]">
       <aside class="hidden bg-navy-950 px-10 pt-12 pb-16 text-slate-100 lg:flex lg:flex-col">
         <div>
-          <h1 class="mt-4 text-3xl font-semibold tracking-tight">School Asset Management System</h1>
+          <p class="mt-4 text-3xl font-semibold tracking-tight">{{ APP_FULL_NAME }}</p>
           <p class="mt-4 max-w-sm text-sm leading-6 text-slate-300">
             Manage school assets across municipalities and schools through a centralized platform.
           </p>
@@ -50,19 +52,19 @@ defineProps({
         <div class="w-full max-w-md">
           <div class="mb-8 text-center">
             <img
-              src="/assets/logo.png"
-              alt="SAMS Nepal"
+              :src="APP_LOGO_SRC"
+              :alt="APP_NAME"
               class="mx-auto h-24 w-24 object-contain"
               width="96"
               height="96"
             />
-            <h1 class="mt-4 text-2xl font-semibold text-navy-950">SAMS Nepal</h1>
-            <p class="mt-1 text-sm font-medium text-slate-600">School Asset Management System</p>
-            <p class="mt-2 text-xs text-slate-500">Asset Tracking, Maintenance &amp; Transfer Management</p>
+            <h1 class="mt-4 text-2xl font-semibold text-navy-950">{{ APP_NAME }}</h1>
+            <p class="mt-1 text-sm font-medium text-slate-600">{{ APP_FULL_NAME }}</p>
+            <p class="mt-2 text-xs text-slate-500">{{ APP_TAGLINE }}</p>
           </div>
           <section class="rounded-lg border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             <h2 class="text-lg font-semibold text-navy-950">{{ title }}</h2>
-            <p class="mt-1 text-sm text-slate-500">Use your official SAMS Nepal account.</p>
+            <p class="mt-1 text-sm text-slate-500">Use your official {{ APP_NAME }} account.</p>
             <slot />
           </section>
         </div>

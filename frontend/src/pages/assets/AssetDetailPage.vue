@@ -237,7 +237,7 @@ watch(
               <img
                 v-if="asset.qrCode"
                 :src="qrImageSrc(asset.qrCode)"
-                alt="Asset QR code"
+                :alt="`QR code for ${asset.assetTag || 'this asset'}`"
                 class="h-40 w-40 rounded-md border border-slate-200 bg-white p-2"
               />
               <p v-else class="text-sm text-slate-500">No QR code available.</p>

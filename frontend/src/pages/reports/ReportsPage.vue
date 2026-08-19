@@ -38,7 +38,7 @@ const reports = [
 <template>
   <div>
     <p class="mb-6 text-sm text-slate-600">
-      Official reports for the current user scope. Exports use the existing Phase 7 XLSX and PDF endpoints.
+      Official reports for the current user scope. Each report can be exported as XLSX or PDF.
     </p>
     <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       <ReportCard

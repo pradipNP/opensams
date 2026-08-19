@@ -16,6 +16,7 @@ defineEmits(['retry']);
       type="button"
       class="btn btn-secondary btn-sm mt-2"
       :disabled="loading"
+      :aria-busy="loading"
       @click="$emit('retry')"
     >
       {{ loading ? 'Loading…' : 'Retry' }}

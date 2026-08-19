@@ -91,6 +91,7 @@ async function onSubmit() {
         type="submit"
         class="btn btn-primary w-full"
         :disabled="auth.loading"
+        :aria-busy="auth.loading"
       >
         {{ auth.loading ? 'Signing in…' : 'Sign in' }}
       </button>

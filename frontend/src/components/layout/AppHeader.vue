@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAppStore } from '@/stores/app.store';
+import { APP_LOGO_SRC, APP_NAME } from '@/constants/app';
 
 const router = useRouter();
 const auth = useAuthStore();
@@ -27,8 +28,8 @@ async function onLogout() {
           Menu
         </button>
         <img
-          src="/assets/logo.png"
-          alt="SAMS Nepal"
+          :src="APP_LOGO_SRC"
+          :alt="APP_NAME"
           class="h-8 w-8 shrink-0 object-contain lg:hidden"
           width="32"
           height="32"

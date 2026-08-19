@@ -4,6 +4,7 @@ import { RouterLink, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAppStore } from '@/stores/app.store';
 import { NAV_ITEMS } from '@/utils/navigation';
+import { APP_FULL_NAME, APP_LOGO_SRC, APP_NAME } from '@/constants/app';
 
 const route = useRoute();
 const auth = useAuthStore();
@@ -88,15 +89,15 @@ function isActive(item) {
     <div class="border-b border-white/10 px-5 py-4">
       <div class="flex items-center gap-3">
         <img
-          src="/assets/logo.png"
+          :src="APP_LOGO_SRC"
           alt=""
           class="h-10 w-10 shrink-0 rounded-md bg-white object-contain p-0.5"
           width="40"
           height="40"
         />
         <div class="min-w-0">
-          <p class="truncate text-sm font-semibold leading-tight text-white">SAMS Nepal</p>
-          <p class="mt-0.5 text-[11px] leading-snug text-slate-400">School Asset Management System</p>
+          <p class="truncate text-sm font-semibold leading-tight text-white">{{ APP_NAME }}</p>
+          <p class="mt-0.5 text-[11px] leading-snug text-slate-400">{{ APP_FULL_NAME }}</p>
         </div>
       </div>
     </div>

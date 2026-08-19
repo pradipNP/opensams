@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import { useAppStore } from '@/stores/app.store';
+import { APP_NAME } from '@/constants/app';
 
 const routes = [
   {
@@ -26,6 +27,12 @@ const routes = [
         name: 'profile',
         component: () => import('@/pages/profile/ProfilePage.vue'),
         meta: { requiresAuth: true, title: 'My profile' },
+      },
+      {
+        path: 'about',
+        name: 'about',
+        component: () => import('@/pages/about/AboutPage.vue'),
+        meta: { requiresAuth: true, title: 'About system' },
       },
       {
         path: 'assets',
@@ -241,7 +248,7 @@ router.beforeEach(async (to) => {
     await auth.initializeAuth();
   }
 
-  app.setPageTitle(to.meta.title || 'SAMS Nepal');
+  app.setPageTitle(to.meta.title || APP_NAME);
 
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return { name: 'login', query: { redirect: to.fullPath } };
