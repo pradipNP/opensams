@@ -12,6 +12,8 @@ SAMS Nepal is a web application for tracking school assets, maintenance, transfe
 | [docs/Deployment-Guide.md](docs/Deployment-Guide.md) | How to build and run frontend, backend, and database |
 | [docs/Production-Checklist.md](docs/Production-Checklist.md) | Release checklist |
 | [docs/Technical-Documentation.md](docs/Technical-Documentation.md) | Architecture, RBAC, and folder structure |
+| [docs/SAMS-Nepal-Architecture-Plan.html](docs/SAMS-Nepal-Architecture-Plan.html) | As-built architecture plan (HTML) |
+| [docs/SAMS-Nepal-Architecture-Plan.pdf](docs/SAMS-Nepal-Architecture-Plan.pdf) | As-built architecture plan (PDF) |
 | [docs/API-CONTRACT.md](docs/API-CONTRACT.md) | REST API specification |
 | [docs/ER-DIAGRAM.md](docs/ER-DIAGRAM.md) | Database model |
 
