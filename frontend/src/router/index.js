@@ -84,8 +84,44 @@ const routes = [
       {
         path: 'reports',
         name: 'reports',
-        component: () => import('@/pages/ComingSoon.vue'),
-        meta: { requiresAuth: true, title: 'Reports' },
+        component: () => import('@/pages/reports/ReportsPage.vue'),
+        meta: { requiresAuth: true, title: 'Reports', permission: 'reports:read' },
+      },
+      {
+        path: 'reports/inventory',
+        name: 'report-inventory',
+        component: () => import('@/pages/reports/InventoryReportPage.vue'),
+        meta: { requiresAuth: true, title: 'Inventory report', permission: 'reports:read' },
+      },
+      {
+        path: 'reports/municipality',
+        name: 'report-municipality',
+        component: () => import('@/pages/reports/MunicipalityReportPage.vue'),
+        meta: { requiresAuth: true, title: 'Municipality report', permission: 'reports:read' },
+      },
+      {
+        path: 'reports/school',
+        name: 'report-school',
+        component: () => import('@/pages/reports/SchoolReportPage.vue'),
+        meta: { requiresAuth: true, title: 'School report', permission: 'reports:read' },
+      },
+      {
+        path: 'reports/maintenance',
+        name: 'report-maintenance',
+        component: () => import('@/pages/reports/MaintenanceReportPage.vue'),
+        meta: { requiresAuth: true, title: 'Maintenance report', permission: 'reports:read' },
+      },
+      {
+        path: 'reports/transfers',
+        name: 'report-transfers',
+        component: () => import('@/pages/reports/TransferReportPage.vue'),
+        meta: { requiresAuth: true, title: 'Transfer report', permission: 'reports:read' },
+      },
+      {
+        path: 'reports/summary',
+        name: 'report-summary',
+        component: () => import('@/pages/reports/SummaryReportPage.vue'),
+        meta: { requiresAuth: true, title: 'Summary report', permission: 'reports:read' },
       },
       {
         path: 'users',

@@ -18,7 +18,12 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    if (response.config.responseType === 'blob') {
+      return response;
+    }
+    return response.data;
+  },
   (error) => {
     const status = error.response?.status;
     const skipRedirect = error.config?.skipAuthRedirect;

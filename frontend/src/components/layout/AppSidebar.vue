@@ -31,6 +31,9 @@ function isActive(item) {
   if (item.name === 'transfers') {
     return String(route.path).startsWith('/transfers');
   }
+  if (item.name === 'reports') {
+    return String(route.path).startsWith('/reports');
+  }
   return route.name === item.name;
 }
 </script>

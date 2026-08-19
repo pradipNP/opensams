@@ -1,0 +1,76 @@
+<script setup>
+import { onMounted, ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import Alert from '@/components/ui/Alert.vue';
+import ReportTable from '@/components/reports/ReportTable.vue';
+import ExportButtons from '@/components/reports/ExportButtons.vue';
+import { getReport } from '@/api/report.api';
+import { errorMessage, formatCurrency, formatNumber } from '@/utils/format';
+import { blobErrorMessage, downloadReportFile } from '@/utils/download';
+
+const loading = ref(true);
+const error = ref('');
+const exportError = ref('');
+const exporting = ref('');
+const rows = ref([]);
+const meta = ref({ page: 1, limit: 20, total: 0, totalPages: 0 });
+const page = ref(1);
+
+const columns = [
+  { key: 'name', label: 'Municipality' },
+  { key: 'schools', label: 'Schools', get: (row) => formatNumber(row.totalSchools) },
+  { key: 'assets', label: 'Assets', get: (row) => formatNumber(row.totalAssets) },
+  { key: 'value', label: 'Asset Value', get: (row) => formatCurrency(row.totalAssetValue) },
+];
+
+async function loadReport() {
+  loading.value = true;
+  error.value = '';
+  try {
+    const response = await getReport('municipality', { page: page.value, limit: 20 });
+    rows.value = response.data || [];
+    meta.value = response.meta || { page: page.value, limit: 20, total: 0, totalPages: 0 };
+  } catch (err) {
+    error.value = errorMessage(err, 'Unable to load municipality report.');
+    rows.value = [];
+    meta.value = { page: 1, limit: 20, total: 0, totalPages: 0 };
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function onExport(format) {
+  exporting.value = format;
+  exportError.value = '';
+  try {
+    await downloadReportFile('municipality', format, {});
+  } catch (err) {
+    exportError.value = await blobErrorMessage(err, 'Unable to export municipality report.');
+  } finally {
+    exporting.value = '';
+  }
+}
+
+onMounted(loadReport);
+</script>
+
+<template>
+  <div>
+    <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <RouterLink :to="{ name: 'reports' }" class="text-sm text-navy-800 hover:underline">← Back to reports</RouterLink>
+      <ExportButtons :exporting="exporting" @export="onExport" />
+    </div>
+
+    <Alert v-if="exportError" class="mb-4" :message="exportError" />
+    <Alert v-if="error" class="mb-4" :message="error" />
+
+    <ReportTable
+      :rows="rows"
+      :columns="columns"
+      :meta="meta"
+      :loading="loading"
+      empty-message="No municipality records are available in your scope."
+      @page="(nextPage) => { page = nextPage; loadReport(); }"
+    />
+  </div>
+</template>
