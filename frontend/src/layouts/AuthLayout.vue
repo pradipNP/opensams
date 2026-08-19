@@ -10,22 +10,40 @@ defineProps({
 <template>
   <div class="min-h-screen bg-slate-100">
     <div class="grid min-h-screen lg:grid-cols-[420px_1fr]">
-      <aside class="hidden bg-navy-950 px-10 py-12 text-slate-100 lg:flex lg:flex-col lg:justify-between">
+      <aside class="hidden bg-navy-950 px-10 pt-12 pb-16 text-slate-100 lg:flex lg:flex-col">
         <div>
-          <img
-            src="/assets/logo.png"
-            alt="SAMS Nepal"
-            class="h-24 w-24 rounded-md bg-white object-contain p-1"
-            width="96"
-            height="96"
-          />
-          <h1 class="mt-6 text-3xl font-semibold tracking-tight">SAMS Nepal</h1>
-          <p class="mt-2 text-sm font-medium text-slate-200">School Asset Management System</p>
-          <p class="mt-3 max-w-sm text-sm leading-6 text-slate-300">
-            Asset Tracking, Maintenance &amp; Transfer Management for municipalities and public schools.
+          <h1 class="mt-4 text-3xl font-semibold tracking-tight">School Asset Management System</h1>
+          <p class="mt-4 max-w-sm text-sm leading-6 text-slate-300">
+            Manage school assets across municipalities and schools through a centralized platform.
           </p>
+          <ul class="mt-8 space-y-3 text-sm text-slate-200">
+            <li class="flex gap-3">
+              <span class="shrink-0 font-semibold text-slate-100" aria-hidden="true">✓</span>
+              <span>Asset Registration</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="shrink-0 font-semibold text-slate-100" aria-hidden="true">✓</span>
+              <span>Asset Tracking</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="shrink-0 font-semibold text-slate-100" aria-hidden="true">✓</span>
+              <span>Maintenance Management</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="shrink-0 font-semibold text-slate-100" aria-hidden="true">✓</span>
+              <span>Asset Transfers</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="shrink-0 font-semibold text-slate-100" aria-hidden="true">✓</span>
+              <span>Reports &amp; Analytics</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="shrink-0 font-semibold text-slate-100" aria-hidden="true">✓</span>
+              <span>Role-Based Access Control</span>
+            </li>
+          </ul>
         </div>
-        <p class="text-xs text-slate-500">Authorized personnel only</p>
+        <p class="mt-auto shrink-0 pt-8 text-xs text-slate-500">Authorized personnel only</p>
       </aside>
 
       <main class="flex items-center justify-center px-4 py-10 sm:px-8">
