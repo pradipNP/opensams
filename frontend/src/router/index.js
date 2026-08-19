@@ -66,8 +66,20 @@ const routes = [
       {
         path: 'transfers',
         name: 'transfers',
-        component: () => import('@/pages/ComingSoon.vue'),
+        component: () => import('@/pages/transfers/TransferListPage.vue'),
         meta: { requiresAuth: true, title: 'Transfers' },
+      },
+      {
+        path: 'transfers/create',
+        name: 'transfer-create',
+        component: () => import('@/pages/transfers/TransferCreatePage.vue'),
+        meta: { requiresAuth: true, title: 'Create transfer', permission: 'transfers:request' },
+      },
+      {
+        path: 'transfers/:id',
+        name: 'transfer-detail',
+        component: () => import('@/pages/transfers/TransferDetailPage.vue'),
+        meta: { requiresAuth: true, title: 'Transfer details' },
       },
       {
         path: 'reports',
