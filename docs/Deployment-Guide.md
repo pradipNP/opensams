@@ -147,6 +147,10 @@ Environment variables on Render (never commit these):
 | `CORS_ORIGIN` | Exact Cloudflare Pages origin |
 | `JWT_EXPIRES_IN` | Optional; default `24h` |
 | `APP_VERSION` | Optional; default `1.0.0` |
+| `DEMO_RESET_ENABLED` | Optional. Set `true` only for the public portfolio demo |
+| `DEMO_RESET_INTERVAL_HOURS` | Optional; default `24`. Restores seed users/schools/assets |
+
+Manual restore (same snapshot): from `backend/` with `DEMO_RESET_FORCE=true`, run `npm run reset-demo`. From `database/`, `psql "$DATABASE_URL" -f reset_demo.sql`.
 
 OpenAPI UI is served at `/api/docs`. Restrict or disable it on the platform if you do not want the contract public.
 

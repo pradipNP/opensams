@@ -2,6 +2,8 @@
   "name": "sams-nepal-frontend",
   "private": true,
   "version": "1.0.0",
+  "license": "MIT",
+  "author": "Pradip Kumar Prajapati",
   "type": "module",
   "scripts": {
     "dev": "vite",
