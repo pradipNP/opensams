@@ -9,7 +9,15 @@ function requireEnv(name, fallback) {
   return value;
 }
 
+function normalizeDatabaseUrl(url) {
+  return String(url || '')
+    .replace(/&channel_binding=require/gi, '')
+    .replace(/\?channel_binding=require&/gi, '?')
+    .replace(/\?channel_binding=require$/gi, '');
+}
+
 const nodeEnv = process.env.NODE_ENV || 'development';
+const databaseUrl = normalizeDatabaseUrl(process.env.DATABASE_URL);
 
 const config = {
   env: nodeEnv,
@@ -22,9 +30,10 @@ const config = {
     expiresIn: process.env.JWT_EXPIRES_IN || '24h',
   },
   db: {
-    connectionString: process.env.DATABASE_URL || '',
+    connectionString: databaseUrl,
     sslRequired:
-      String(process.env.DATABASE_URL || '').includes('sslmode=require') ||
+      nodeEnv === 'production' ||
+      databaseUrl.includes('sslmode=require') ||
       String(process.env.PGSSLMODE || '') === 'require',
   },
 };
