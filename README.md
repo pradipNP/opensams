@@ -12,6 +12,29 @@ This is an independent portfolio project. It is not an official government produ
 | **Version** | 1.0.0 |
 | **License** | [MIT](LICENSE) |
 | **Copyright** | © 2026 Pradip Kumar Prajapati |
+| **Repository** | [github.com/pradipNP/opensams](https://github.com/pradipNP/opensams) |
+
+## Live demo
+
+The public demo is hosted on free tiers. The first visit after idle time can take up to a minute while Render and Neon wake.
+
+| What | Where it is hosted | URL |
+|---|---|---|
+| Web app (Vue) | Cloudflare Pages | [https://opensams.pages.dev](https://opensams.pages.dev) |
+| API | Render | [https://opensams.onrender.com](https://opensams.onrender.com) |
+| API health | Render | [https://opensams.onrender.com/health](https://opensams.onrender.com/health) |
+| API docs (Swagger) | Render | [https://opensams.onrender.com/api/docs](https://opensams.onrender.com/api/docs) |
+| Database | Neon (PostgreSQL) | Not a public URL — the API connects over SSL |
+
+How to run this stack yourself: [docs/Deployment-Guide.md](docs/Deployment-Guide.md).
+
+### Sample walkthrough
+
+<video src="assets/sample.mp4" controls width="100%">
+  <a href="assets/sample.mp4">Download the demo recording (MP4)</a>
+</video>
+
+If the player does not appear on GitHub, [open the recording](assets/sample.mp4).
 
 ## Features
 
@@ -78,7 +101,7 @@ npm install
 npm run dev
 ```
 
-Production hosts must replace every localhost value. See the [deployment guide](docs/Deployment-Guide.md) and [production checklist](docs/Production-Checklist.md).
+The live demo does not use these localhost values. It uses the Cloudflare Pages and Render URLs in **Live demo** above. See the [deployment guide](docs/Deployment-Guide.md) and [production checklist](docs/Production-Checklist.md).
 
 ## License
 

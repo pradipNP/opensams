@@ -129,9 +129,17 @@ Apply schema with `database/run_migrations.sql`. Optional demo data uses `databa
 
 ## Deployment architecture
 
-1. PostgreSQL instance with backups
-2. Node API process behind TLS
-3. Static frontend (`frontend/dist`) with SPA fallback
-4. Frontend `VITE_API_URL` pointing at the API `/api/v1`
+The public demo for this repository:
+
+| Layer | Platform | URL |
+|---|---|---|
+| Static frontend | Cloudflare Pages | [https://opensams.pages.dev](https://opensams.pages.dev) |
+| Express API | Render | [https://opensams.onrender.com](https://opensams.onrender.com) |
+| PostgreSQL | Neon | Private (`DATABASE_URL` on Render) |
+
+1. PostgreSQL instance with backups (demo: Neon)
+2. Node API process behind TLS (demo: Render)
+3. Static frontend (`frontend/dist`) with SPA fallback (demo: Cloudflare Pages)
+4. Frontend `VITE_API_URL` pointing at the API `/api/v1` (demo: `https://opensams.onrender.com/api/v1`)
 
 See `docs/Deployment-Guide.md` for commands and environment variables.

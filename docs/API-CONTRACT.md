@@ -3,6 +3,8 @@
 > School Asset Management System · REST API Specification  
 > Base URL: `/api/v1` · August 2026
 
+Live demo API: [https://opensams.onrender.com/api/v1](https://opensams.onrender.com/api/v1) (Render). OpenAPI UI: [https://opensams.onrender.com/api/docs](https://opensams.onrender.com/api/docs). Frontend: [https://opensams.pages.dev](https://opensams.pages.dev) (Cloudflare Pages). Database: Neon PostgreSQL (private).
+
 ---
 
 ## General Conventions
@@ -11,7 +13,7 @@
 
 | Environment | URL |
 |-------------|-----|
-| Production | `https://<your-api-host>/api/v1` |
+| Production | `https://opensams.onrender.com/api/v1` |
 | Development | `http://localhost:<port>/api/v1` (see `backend/.env`; often port `5001`) |
 
 ### Authentication

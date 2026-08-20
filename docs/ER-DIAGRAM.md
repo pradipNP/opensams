@@ -2,6 +2,8 @@
 
 > School Asset Management System · Database v1.0 · August 2026
 
+Live demo: [https://opensams.pages.dev](https://opensams.pages.dev) (Cloudflare Pages) talks to [https://opensams.onrender.com](https://opensams.onrender.com) (Render), which stores data in Neon PostgreSQL.
+
 ## Overview
 
 The SAMS Nepal database models a **four-tier geographic hierarchy** (Province → Municipality → School → Asset) with **role-based user scoping**, **asset lifecycle tracking**, **inter-school transfers**, and **maintenance workflows**.

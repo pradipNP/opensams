@@ -6,7 +6,19 @@ This guide explains how to use SAMS Nepal after you have been given an account. 
 
 ## Sign in
 
-1. Open the SAMS Nepal web application.
+**Public demo:** [https://opensams.pages.dev](https://opensams.pages.dev) (Cloudflare Pages). The API behind it is [https://opensams.onrender.com](https://opensams.onrender.com) (Render). The first load after idle time can be slow.
+
+Demo accounts (portfolio only):
+
+| Role | Email | Password |
+|---|---|---|
+| State Administrator | `state.admin@sams.gov.np` | `password` |
+| Municipal Officer | `municipal.butwal@sams.gov.np` | `password` |
+| School Administrator | `school.kmg@sams.gov.np` | `password` |
+
+Walkthrough video: [`assets/sample.mp4`](../assets/sample.mp4).
+
+1. Open the SAMS Nepal web application (the live demo URL above, or your local `http://localhost:5173`).
 2. Enter your email address and password.
 3. Select **Sign in**.
 

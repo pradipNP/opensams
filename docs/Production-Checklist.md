@@ -6,6 +6,17 @@ Use this list before a production release. Localhost values belong only in devel
 
 Related documents: `docs/Deployment-Guide.md`, `docs/Technical-Documentation.md`, `docs/User-Guide.md`.
 
+## Public demo (this repository)
+
+| Layer | Platform | URL |
+|---|---|---|
+| Frontend | Cloudflare Pages | [https://opensams.pages.dev](https://opensams.pages.dev) |
+| API | Render | [https://opensams.onrender.com](https://opensams.onrender.com) |
+| Health | Render | [https://opensams.onrender.com/health](https://opensams.onrender.com/health) |
+| Database | Neon | Private |
+
+Sample walkthrough: [`assets/sample.mp4`](../assets/sample.mp4).
+
 ## Frontend deployment
 
 - [ ] `frontend/.env` (or CI secrets) sets `VITE_API_URL` to the **public** API base including `/api/v1`
@@ -60,14 +71,14 @@ Do not put production connection strings in this repository.
 
 | Variable | Where | Local example | Production |
 |---|---|---|---|
-| `VITE_API_URL` | Frontend build | `http://localhost:5001/api/v1` | `https://<api-host>/api/v1` |
+| `VITE_API_URL` | Frontend build | `http://localhost:5001/api/v1` | `https://opensams.onrender.com/api/v1` |
 | `NODE_ENV` | Backend | `development` | `production` |
 | `PORT` | Backend | `5000` or `5001` | Platform port |
 | `APP_VERSION` | Backend | `1.0.0` | Release version |
 | `DATABASE_URL` | Backend | `postgresql://USER:PASSWORD@HOST:PORT/DATABASE` | Managed DB + SSL |
 | `JWT_SECRET` | Backend | dev placeholder | Long unique secret |
 | `JWT_EXPIRES_IN` | Backend | `24h` | Policy-appropriate TTL |
-| `CORS_ORIGIN` | Backend | `http://localhost:5173` | Live frontend origin |
+| `CORS_ORIGIN` | Backend | `http://localhost:5173` | `https://opensams.pages.dev` |
 
 Required for a working production system: `VITE_API_URL`, `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`.
 

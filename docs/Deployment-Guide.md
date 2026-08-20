@@ -2,7 +2,19 @@
 
 School Asset Management System · Version 1.0.0
 
-This guide describes how to build and run the SAMS Nepal frontend and backend for production. It does not deploy the application for you.
+This guide describes how to build and run the SAMS Nepal frontend and backend for production. The public demo for this repository is already hosted; the steps below are for reproducing or replacing that stack.
+
+## Public demo (this repository)
+
+| Layer | Platform | Live URL |
+|---|---|---|
+| Frontend | Cloudflare Pages | [https://opensams.pages.dev](https://opensams.pages.dev) |
+| Backend API | Render (Docker, root `backend`) | [https://opensams.onrender.com](https://opensams.onrender.com) |
+| Health | Render | [https://opensams.onrender.com/health](https://opensams.onrender.com/health) |
+| OpenAPI | Render | [https://opensams.onrender.com/api/docs](https://opensams.onrender.com/api/docs) |
+| Database | Neon PostgreSQL (`sams-nepal`, Singapore) | Private — used only via `DATABASE_URL` |
+
+Source: [https://github.com/pradipNP/opensams](https://github.com/pradipNP/opensams). Sample walkthrough: [`assets/sample.mp4`](../assets/sample.mp4).
 
 ## Architecture (runtime)
 
@@ -30,7 +42,7 @@ This guide describes how to build and run the SAMS Nepal frontend and backend fo
 | `DATABASE_URL` | **Yes** | PostgreSQL connection string |
 | `JWT_SECRET` | **Yes** in production | Signing secret for access tokens |
 | `JWT_EXPIRES_IN` | No (default `24h`) | Token lifetime |
-| `CORS_ORIGIN` | Recommended | Exact frontend origin, e.g. `https://app.example.com` |
+| `CORS_ORIGIN` | Recommended | Exact frontend origin, e.g. `https://opensams.pages.dev` |
 
 Example (placeholders only — replace every value on the host):
 
@@ -41,7 +53,7 @@ APP_VERSION=1.0.0
 DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require
 JWT_SECRET=REPLACE_WITH_LONG_RANDOM_SECRET
 JWT_EXPIRES_IN=24h
-CORS_ORIGIN=https://YOUR_FRONTEND_ORIGIN
+CORS_ORIGIN=https://opensams.pages.dev
 ```
 
 Copy `backend/.env.example` and replace secrets. Never commit production secrets.
@@ -55,7 +67,7 @@ Copy `backend/.env.example` and replace secrets. Never commit production secrets
 Example:
 
 ```
-VITE_API_URL=https://YOUR_API_HOST/api/v1
+VITE_API_URL=https://opensams.onrender.com/api/v1
 ```
 
 Copy `frontend/.env.example`. Vite inlines this value at **build** time. Changing it later requires a new frontend build.
@@ -120,7 +132,7 @@ The frontend is a static Vite build and can be hosted on Cloudflare Pages.
 1. Set the Pages project root to `frontend` (or set the build root equivalently in the dashboard).
 2. Build command: `npm ci && npm run build`
 3. Output directory: `dist`
-4. Environment variable (build time): `VITE_API_URL=https://YOUR_API_HOST/api/v1`
+4. Environment variable (build time): `VITE_API_URL=https://opensams.onrender.com/api/v1` (this demo) or your own API host
 5. Vue Router history mode: `frontend/public/_redirects` is copied into `dist` and sends unknown paths to `index.html`. Existing files (including `/assets/logo.png`) are still served when present.
 6. Confirm the Pages origin is the exact value used in backend `CORS_ORIGIN` (scheme + host, no trailing slash).
 
