@@ -30,11 +30,9 @@ How to run this stack yourself: [docs/Deployment-Guide.md](docs/Deployment-Guide
 
 ### Sample walkthrough
 
-<video src="assets/sample.mp4" controls width="100%">
-  <a href="assets/sample.mp4">Download the demo recording (MP4)</a>
-</video>
+https://github.com/user-attachments/assets/29e93017-67c8-4e84-a0ed-62a11281aebd
 
-If the player does not appear on GitHub, [open the recording](assets/sample.mp4).
+[Open the live app](https://opensams.pages.dev)
 
 ## Features
 
