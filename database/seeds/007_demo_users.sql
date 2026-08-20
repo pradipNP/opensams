@@ -14,7 +14,7 @@ INSERT INTO users (
     NULL,
     NULL,
     'state.admin@sams.gov.np',
-    '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+    '$2a$10$dKf5Z3fBcSGEPgIP3NpCc.1LkOJQd0woZQHv4dm3oJ/2A54SMqY3G',
     'Rajesh Sharma'
 ),
 (
@@ -24,7 +24,7 @@ INSERT INTO users (
     '33333333-3333-4333-8333-333333333301',
     NULL,
     'municipal.butwal@sams.gov.np',
-    '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+    '$2a$10$dKf5Z3fBcSGEPgIP3NpCc.1LkOJQd0woZQHv4dm3oJ/2A54SMqY3G',
     'Priya Thapa'
 ),
 (
@@ -34,6 +34,6 @@ INSERT INTO users (
     '33333333-3333-4333-8333-333333333301',
     '44444444-4444-4444-8444-444444444401',
     'school.kmg@sams.gov.np',
-    '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+    '$2a$10$dKf5Z3fBcSGEPgIP3NpCc.1LkOJQd0woZQHv4dm3oJ/2A54SMqY3G',
     'Amit KC'
 );
